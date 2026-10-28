@@ -86,8 +86,17 @@ Problemi concreti visti lavorandoci:
      identica; `test/laser-widget.js` prova tocco, loop e aiuto nel browser
      con un gateway finto. Trovato e corretto l'aiuto vecchio (parlava della
      modalita' DMX tolta).
-   - Prossimi: `audiorigs`, `fixgrid`, `cuestack`, poi gli altri un tipo per
-     commit. Alla fine spariscono gli switch.
+   - `fixgrid`, `cuestack` (in `94-console-widgets.js`) e `audiorigs` (in
+     `96-audio-rigs.js`): FATTI. `test/widget-registry.js` verifica nel
+     browser OGNI tipo registrato: contenuto da `inner`, valore/indirizzo
+     nascosti come dichiarato, tocco senza errori, aiuto della visita guidata
+     uguale a quello registrato (piu' un tocco con effetto per `fixgrid`).
+     Verificato che scatta se il registro non viene consultato.
+   - Restano negli switch 15 tipi: fader, knob, button, xy, meter, label,
+     scenes (con i suoi modi), color, timeline, clock, stage e la famiglia
+     Gaia (gaia, patchdeck, tddevice, gaiadmx, via GAIA_TYPES). I piu'
+     intrecciati sono `scenes` (molti modi), `timeline` e `stage`: vanno per
+     ultimi. Alla fine spariscono gli switch.
 3. **Bus dei messaggi**: OSC e MQTT in arrivo indicizzati per indirizzo e
    topic; i widget si iscrivono a cio' che ascoltano.
 4. **Involucro su `L`** (il layout condiviso resta la fonte di verita',

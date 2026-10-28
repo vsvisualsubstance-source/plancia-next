@@ -66,7 +66,7 @@ test('registered widget types live only in their module, not in the old dispatch
   const dir = path.join(__dirname, '..', 'src');
   const all = appModules.map(f => fs.readFileSync(path.join(dir, f), 'utf8')).join('\n');
   const registered = [...all.matchAll(/registerWidget\('([^']+)'/g)].map(m => m[1]);
-  assert.ok(registered.includes('laser'));
+  for (const t of ['laser', 'fixgrid', 'cuestack', 'audiorigs']) assert.ok(registered.includes(t), t);
   const dispatch = ['00-core-state.js', '40-widget-rendering.js', '41-widget-interactions.js', '80-animation-loop.js', '95-help-tour.js'];
   for (const type of registered) for (const f of dispatch)
     assert.ok(!fs.readFileSync(path.join(dir, f), 'utf8').includes(`'${type}'`), `${type} compare ancora in ${f}`);

@@ -95,3 +95,17 @@ document.addEventListener('change',async e=>{const s=e.target.closest?.('[data-a
   const targets=(L.fixtures||[]).filter(f=>sel.has(f.id)&&fixtureHasPalette(f));
   try{const r=await setFixturesAudio(targets,{audio_gain:+s.value});showInfo(`Guadagno audio ${(+s.value).toFixed(2)} su ${r.done} luci.`)}catch(err){showError('Audio luci: '+err.message)}});
 document.addEventListener('input',e=>{const s=e.target.closest?.('[data-aud-gain]');if(!s)return;const b=s.parentElement.querySelector('b');if(b)b.textContent=(+s.value).toFixed(2)});
+
+/* ---------- tipo di widget: fixgrid (luci (colori singoli)) ---------- */
+registerWidget('fixgrid',{size:[10,6],label:'Luci',showsValue:false,showsAddr:false,
+  inner:()=>'<div class="fg"></div>',
+  onPointer:fixGridDown,
+  tick:(el,w,{repaint})=>{if(repaint)paintFixGrid(el,w)},
+  help:w=>['Luci e colori singoli','Ogni tessera è una luce col colore che esce davvero. Toccale per selezionarle (o scegli un gruppo + "Seleziona tutte", pari/dispari), poi tocca una palette: cambia solo il colore, livello e audio restano del rig. "Segue il rig" toglie la palette propria.']});
+
+/* ---------- tipo di widget: cuestack (pila scene GO/BACK) ---------- */
+registerWidget('cuestack',{size:[4,6],label:'Scene GO',showsValue:false,showsAddr:false,
+  inner:()=>'<div class="cs"></div>',
+  onPointer:cueStackDown,
+  tick:(el,w,{repaint})=>{if(repaint)paintCueStack(el,w)},
+  help:w=>['Pila scene (GO/BACK)','Le scene di DMX Master in ordine. ▶ = scena in uscita, NEXT = la prossima. Tocca una riga per prepararla come NEXT, poi GO la manda con il fade impostato. BACK torna alla scena precedente.']});

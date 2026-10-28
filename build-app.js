@@ -48,7 +48,7 @@ const appModules = [
 const TEST_HOOKS = `
 window.__planciaTest={
   get L(){return L},set L(v){L=v},
-  G,W,P,TPL,DEF,NAMES,argsOf,out,set,setXY,send,fire,flush,render,ensureStageData,widgetType,
+  G,W,P,TPL,DEF,NAMES,argsOf,out,set,setXY,send,fire,flush,render,ensureStageData,widgetType,WIDGET_TYPES,
   migrations:[['migrateLegacyHeadSelectors',migrateLegacyHeadSelectors],['migrateHeadPresetWidgets',migrateHeadPresetWidgets],
     ['migrateUiShowTimeline',migrateUiShowTimeline],['migrateUiConsolePages',migrateUiConsolePages],['migrateUiAudioPage',migrateUiAudioPage],
     ['migrateUiNoChase',migrateUiNoChase],['migrateUiOneDmxV8',migrateUiOneDmxV8],['migrateUiLaserPage',migrateUiLaserPage],

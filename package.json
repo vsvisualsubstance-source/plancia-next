@@ -10,7 +10,7 @@
     "dev": "run_dev.bat",
     "smoke": "node test/ui-smoke.js",
     "characterize": "node test/characterize.js",
-    "check": "npm test && node test/characterize.js && node test/ui-smoke.js && node test/laser-widget.js"
+    "check": "npm test && node test/characterize.js && node test/ui-smoke.js && node test/laser-widget.js && node test/widget-registry.js"
   },
   "dependencies": {
     "mqtt": "^5.16.1",

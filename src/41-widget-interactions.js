@@ -5,9 +5,6 @@ function bind(el,w){
     if(GAIA_TYPES.has(w.type)) return gBind(e,el,w);
     const t=widgetType(w.type);if(t?.onPointer)return t.onPointer(e,el,w);
     if(w.type==='label'||w.type==='meter'||w.type==='clock') return;
-    if(w.type==='fixgrid')return fixGridDown(e,el,w);
-    if(w.type==='cuestack')return cueStackDown(e,el,w);
-    if(w.type==='audiorigs')return audioRigsDown(e,el,w);
     const end=()=>{el.classList.remove('active','press');el.onpointermove=null;el.onpointerup=el.onpointercancel=null;save()};
     if(w.type==='stage'){const b=e.target.closest('[data-v]');if(b){w.view=b.dataset.v;el.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));save()}
       else if(e.target.closest('[data-act="syncall"]'))syncAllFixtures();
