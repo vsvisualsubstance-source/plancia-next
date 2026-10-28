@@ -14,6 +14,12 @@ const VISIBLE_TAPS = {
   fixgrid: { tap: '[data-fg-filter="mh"]', expect: `document.querySelector('[data-fg-filter="mh"]')?.classList.contains('on')` },
 };
 
+// controlli in piu' su cio' che fa mounted() dopo la costruzione
+const MOUNTED = {
+  gaia: `(()=>{const w=window.__probe.w,el=document.querySelector('[data-id="'+w.id+'"]'),c=el.querySelector('canvas');
+    return c.width>0&&c.height>0&&el.classList.contains('narrow')===(w.w<8)})()`,
+};
+
 // controlli che cambiano valore al primo tocco (la manopola e' relativa: solo trascinando)
 const CHANGES_ON_TAP = new Set(['fader', 'xy', 'button', 'color']);
 
@@ -50,6 +56,7 @@ const CHANGES_ON_TAP = new Set(['fader', 'xy', 'button', 'color']);
       assert.ok(r.addrHidden, `${type}: mostra l'indirizzo ma showsAddr e' false`);
       assert.deepEqual(p.problems.slice(before), [], `${type}: errori al tocco: ${p.problems.slice(before).join(' | ')}`);
       if (CHANGES_ON_TAP.has(type)) assert.ok(r.changed, `${type}: il tocco non cambia il valore`);
+      if (MOUNTED[type]) assert.ok(await p.ev(MOUNTED[type]), `${type}: mounted() non ha preparato il widget`);
       if (VISIBLE_TAPS[type]) {
         await p.ev(`document.querySelector('${VISIBLE_TAPS[type].tap}').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true}));1`);
         await sleep(400);

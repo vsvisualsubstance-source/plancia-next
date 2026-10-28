@@ -31,7 +31,7 @@ function helpForWidget(w){
       if(a==='/mh/position')return['Posizioni teste','Posizioni pronte per le teste selezionate.'];
       if(a.startsWith('/mh/gobo'))return['Gobo','Il disegno proiettato dalle teste.'];
       return['Scelte',`Tocca per scegliere (${a||'nessun indirizzo'}).`];
-    default:return[w.label||NAMES[w.type]||w.type,GAIA_TYPES.has(w.type)?'Controllo di Gaia / TouchDesigner via MQTT.':`Indirizzo ${a||'—'}.`];
+    default:return[w.label||NAMES[w.type]||w.type,`Indirizzo ${a||'—'}.`];
   }
 }
 const HELP_BAR=[

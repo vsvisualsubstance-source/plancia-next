@@ -2,7 +2,6 @@
 function bind(el,w){
   el.addEventListener('pointerdown',e=>{
     if(editing) return editDown(e,el,w);
-    if(GAIA_TYPES.has(w.type)) return gBind(e,el,w);
     const t=widgetType(w.type);if(t?.onPointer)return t.onPointer(e,el,w);
     const end=()=>{el.classList.remove('active','press');el.onpointermove=null;el.onpointerup=el.onpointercancel=null;save()};
     if(w.type==='stage'){const b=e.target.closest('[data-v]');if(b){w.view=b.dataset.v;el.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));save()}

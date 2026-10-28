@@ -100,8 +100,13 @@ Problemi concreti visti lavorandoci:
      gesto, come la parte comune di prima). `test/widget-registry.js` ora
      tocca ogni widget con un mouse vero (CDP) e controlla che fader, pad,
      pulsante e colore cambino valore: 12 tipi verificati.
-   - Restano negli switch: `scenes` (molti modi), `timeline`, `stage` e la
-     famiglia Gaia (gaia, patchdeck, tddevice, gaiadmx, via GAIA_TYPES).
+   - Famiglia Gaia (gaia, patchdeck, tddevice, gaiadmx): FATTA, quattro
+     `registerWidget` in fondo a `72-gaia-interactions.js` con uno spec comune
+     (`gInner`, `gPaint`, `gBind`); nuovo hook `mounted(el,w)` dopo la
+     costruzione (canvas e classe `narrow` del widget gaia). `GAIA_TYPES` e'
+     uscito dai punti di smistamento: resta solo nell'ispettore e nel
+     ridimensionamento in modifica griglia. 16 tipi verificati nel browser.
+   - Restano negli switch: `scenes` (molti modi), `timeline`, `stage`.
    - Prossima fase del registro: l'ispettore di "Modifica griglia"
      (`renderInsp` in 41) ha ancora campi per tipo (range, modo del
      pulsante, modalita' dell'orologio, nota dell'indicatore): diventera'

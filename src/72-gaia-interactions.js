@@ -31,3 +31,20 @@ function dragSlider(e,el,sl,apply){
   mv(e);sl.onpointermove=mv;sl.onpointerup=sl.onpointercancel=()=>{if(pending)pending();sl.onpointermove=sl.onpointerup=sl.onpointercancel=null;el._drag=null};
 }
 document.addEventListener('submit',e=>{const f=e.target.closest('.ga-in');if(!f)return;e.preventDefault();const i=f.querySelector('input');gSay(i.value);i.value='';G.dirty=true});
+
+/* ---------- tipi di widget della famiglia Gaia (MQTT, nessun indirizzo OSC) ---------- */
+// gaia = mood, pensieri e chat; patchdeck = i due deck; tddevice = pannello di un
+// device TD; gaiadmx = DMX della stanza. Contenuto, disegno e tocco restano le
+// funzioni comuni della famiglia (gInner, gPaint, gBind in 71/72).
+// spec comune della famiglia; il widget gaia ha in piu' un canvas (orbita animata)
+// e un'impaginazione stretta sotto 8 colonne
+const gaiaWidget=(size,label,extra={})=>({size,label,showsValue:false,showsAddr:false,
+  inner:gInner,paint:gPaint,onPointer:gBind,
+  help:w=>[w.label||NAMES[w.type]||w.type,'Controllo di Gaia / TouchDesigner via MQTT.'],
+  tick:(el,w,{repaint})=>{if(repaint)gPaint(el,w)},...extra});
+registerWidget('gaia',gaiaWidget([10,8],'Gaia',{
+  mounted:(el,w)=>{sizeCanvas(el);el.classList.toggle('narrow',w.w<8)},
+  tick:(el,w,{repaint,now})=>{if(repaint)gPaint(el,w);gOrb(el,now)}}));
+registerWidget('patchdeck',gaiaWidget([8,6],'PatchDeck'));
+registerWidget('tddevice',gaiaWidget([8,4],'Device TD'));
+registerWidget('gaiadmx',gaiaWidget([6,6],'DMX stanza'));

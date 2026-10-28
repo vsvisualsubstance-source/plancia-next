@@ -43,22 +43,21 @@ function inner(w){
     default: return gInner(w);
   }
 }
-const noVal=new Set(['scenes','timeline','stage','gaia','patchdeck','tddevice','gaiadmx']);
+const noVal=new Set(['scenes','timeline','stage']);
 const showVal=w=>{const t=widgetType(w.type);if(t)return typeof t.showsValue==='function'?t.showsValue(w):t.showsValue;return!noVal.has(w.type)};
 function build(w){
   const el=document.createElement('div');
   el.className='w t-'+w.type+(selId===w.id?' sel':''); el.dataset.id=w.id;
   el.style.setProperty('--c',w.color);
-  const t=widgetType(w.type),addr=(t?!t.showsAddr:w.type==='stage')||GAIA_TYPES.has(w.type)||(w.type==='scenes'&&w.mode==='dmx-enum')?'':(w.addr||'nessun indirizzo');
+  const t=widgetType(w.type),addr=(t?!t.showsAddr:w.type==='stage')||(w.type==='scenes'&&w.mode==='dmx-enum')?'':(w.addr||'nessun indirizzo');
   el.innerHTML=`<div class="box">${inner(w)}<span class="lab">${esc(w.label)}</span><span class="addr">${esc(addr)}</span>${showVal(w)?'<span class="val"></span>':''}</div><span class="rs"></span>`;
   place(el,w); paint(el,w); bind(el,w);
-  if(w.type==='stage'||w.type==='gaia')sizeCanvas(el);
-  el.classList.toggle('narrow',w.type==='gaia'&&w.w<8);
+  if(t?.mounted)t.mounted(el,w);
+  else if(w.type==='stage')sizeCanvas(el);
   return el;
 }
 function paint(el,w){
   if(!el) return;
-  if(GAIA_TYPES.has(w.type))return gPaint(el,w);
   const val=el.querySelector('.val'),t=widgetType(w.type);
   if(t){t.paint?.(el,w);if(val)val.textContent=t.valueText?t.valueText(w):fmt(out(w,w.value));return}
   const v=w.value;

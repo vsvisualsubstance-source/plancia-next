@@ -8,6 +8,7 @@
 //     size:[8,6], label:'Laser',            // dimensioni di default e nome nel menu
 //     showsValue:false, showsAddr:false,    // valore e indirizzo OSC sotto l'etichetta (anche w=>bool)
 //     inner:w=>html,                        // contenuto del widget
+//     mounted:(el,w)=>…,                    // dopo la costruzione (es. dimensionare un canvas)
 //     paint:(el,w)=>…, valueText:w=>testo,  // disegno del valore e testo sotto l'etichetta
 //     args:w=>[…],                          // argomenti OSC (default: il valore nel range min..max)
 //     onPointer:(e,el,w)=>…,                // tocco fuori da "Modifica griglia"

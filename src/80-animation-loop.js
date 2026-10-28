@@ -35,8 +35,7 @@ function loop(){
   const byId=new Map(page().widgets.map(w=>[w.id,w]));
   for(const el of stage.children){const w=byId.get(el.dataset.id);if(!w)continue;
     const t=widgetType(w.type);if(t){t.tick?.(el,w,{repaint:gp,now:n});continue}
-    if(GAIA_TYPES.has(w.type)){if(gp)gPaint(el,w);if(w.type==='gaia')gOrb(el,n)}
-    else if(w.type==='stage'){const c=el.querySelector('canvas'),g=c.getContext('2d');if(!c._d)continue;g.setTransform(c._d,0,0,c._d,0,0);
+    if(w.type==='stage'){const c=el.querySelector('canvas'),g=c.getContext('2d');if(!c._d)continue;g.setTransform(c._d,0,0,c._d,0,0);
       const W=c.width/c._d,H=c.height/c._d;if(w.view==='plot')drawPlot(g,W,H,n,w);else drawRender(g,W,H,n,level);
       const hud=w.view==='plot'?'':`${SH.blackout?'<b>BLACKOUT</b> · ':''}SC ${SH.scene+1} ${esc((tdScenes().length?tdScenes().find(s=>s.index===SH.scene)?.label:dmxOutputFresh()?'':LOOKS[SH.scene]?.n)||'')} · fade ${SH.fade.toFixed(1)}s · chase ${CHASE[SH.chase]||'Off'}${SH.strobe?' · <b>STROBO</b>':''} · ${esc(dmxOutputSummary())}`;
       const h=el.querySelector('.hud');if(h._v!==hud){h.innerHTML=hud;h._v=hud}}
