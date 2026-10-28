@@ -60,18 +60,6 @@ function loop(){
       // prossima cue e tempo che manca: l'operatore sa cosa sta per succedere
       const nx=el.querySelector('.tl-next'),nc=cues[r.cue+1],nt=nc?`PROSSIMA ${r.cue+2} · ${nc.name} · tra ${Math.floor(Math.max(0,nc.t-r.t)/60)}:${String(Math.floor(Math.max(0,nc.t-r.t))%60).padStart(2,'0')}`:'';
       if(nx&&nx.textContent!==nt){nx.textContent=nt;nx.classList.toggle('soon',!!nc&&nc.t-r.t<=10)}}
-    else if(w.type==='clock'){const m=el.querySelector('.clk-main'),sb=el.querySelector('.clk-sub'),d=new Date();let a,b,cl='';
-      if(w.mode==='show'){
-        a=tc(showT);const sample=showClock.authority?showClockSample():null,available=!!sample&&showClockFresh(sample);
-        b=showClock.authority?`TD · ${available?sample.source.toUpperCase():'OFFLINE · FERMO'} · TC 25 fps`:`TC 25 fps · ${showPlaying?'PLAY':'STOP'}`;
-        if(available&&sample.state.playing)cl='live';
-      }
-      else if(w.mode==='countdown'){const [hh,mm]=(w.target||'23:30').split(':').map(Number),e=new Date(d);e.setHours(hh||0,mm||0,0,0);
-        let s=Math.round((e-d)/1000);const neg=s<0;s=Math.abs(s);a=(neg?'+':'')+[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map(v=>String(v).padStart(2,'0')).join(':');
-        b=neg?`Oltre l'orario di fine (${w.target})`:`Fine alle ${w.target||'23:30'}`;cl=neg?'over':s<300?'warn':''}
-      else{a=d.toLocaleTimeString('it-IT',{hour12:false});b=d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})}
-      if(m.textContent!==a)m.textContent=a;if(sb.textContent!==b)sb.textContent=b;
-      el.classList.toggle('warn',cl==='warn');el.classList.toggle('over',cl==='over');el.classList.toggle('live',cl==='live')}
     else if(w.type==='scenes'&&w.mode==='dmx-enum'){if(gp)paintTdEnum(el,w)}
     else if(w.type==='scenes'&&w.addr==='/dmx/scene'){const k=SH.fade>0?clamp((n-SH.t0)/(SH.fade*1000)):1;
       el.querySelectorAll('.si').forEach((x,i)=>{const p=x.querySelector('.prog');if(p)p.style.width=(i===SH.scene&&k<1)?k*100+'%':'0'})}

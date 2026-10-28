@@ -14,6 +14,9 @@ const VISIBLE_TAPS = {
   fixgrid: { tap: '[data-fg-filter="mh"]', expect: `document.querySelector('[data-fg-filter="mh"]')?.classList.contains('on')` },
 };
 
+// controlli che cambiano valore al primo tocco (la manopola e' relativa: solo trascinando)
+const CHANGES_ON_TAP = new Set(['fader', 'xy', 'button', 'color']);
+
 (async () => {
   const p = await startPlancia({ hooks: true });
   const checked = [];
@@ -31,16 +34,22 @@ const VISIBLE_TAPS = {
         const w=T.L.pages[${pageIdx}].widgets.find(x=>x.type==='${type}'),el=document.querySelector('[data-id="'+w.id+'"]');
         const tmp=document.createElement('div');tmp.innerHTML=spec.inner(w);
         const want=tmp.firstElementChild?.className||'',box=el.querySelector('.box');
-        const r=el.getBoundingClientRect();
-        el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,clientX:r.x+r.width/2,clientY:r.y+r.height/2}));
-        return{inner:!want||!!box.querySelector(':scope > .'+want.split(' ')[0]),
-          valueHidden:spec.showsValue||!el.querySelector('.val'),addrHidden:spec.showsAddr||!el.querySelector('.addr')?.textContent,
+        const r=el.getBoundingClientRect();window.__probe={w,before:JSON.stringify([w.value,w.valueY])};
+        const shows=v=>typeof v==='function'?v(w):v;
+        return{x:r.x+r.width/2,y:r.y+r.height/2,inner:!want||!!box.querySelector(':scope > .'+want.split(' ')[0]),
+          valueHidden:shows(spec.showsValue)||!el.querySelector('.val'),addrHidden:shows(spec.showsAddr)||!el.querySelector('.addr')?.textContent,
           help:spec.help?spec.help(w)[0]:null}})()`);
+      // tocco vero (mouse via CDP, con puntatore reale da catturare): valore letto a dito premuto
+      await p.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: r.x, y: r.y, button: 'left', clickCount: 1 });
+      await sleep(150);
+      r.changed = await p.ev(`window.__probe.before!==JSON.stringify([window.__probe.w.value,window.__probe.w.valueY])`);
+      await p.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: r.x, y: r.y, button: 'left', clickCount: 1 });
       await sleep(300);
       assert.ok(r.inner, `${type}: contenuto non creato da inner()`);
       assert.ok(r.valueHidden, `${type}: mostra il valore ma showsValue e' false`);
       assert.ok(r.addrHidden, `${type}: mostra l'indirizzo ma showsAddr e' false`);
-      assert.deepEqual(p.problems.slice(before), [], `${type}: errori al tocco`);
+      assert.deepEqual(p.problems.slice(before), [], `${type}: errori al tocco: ${p.problems.slice(before).join(' | ')}`);
+      if (CHANGES_ON_TAP.has(type)) assert.ok(r.changed, `${type}: il tocco non cambia il valore`);
       if (VISIBLE_TAPS[type]) {
         await p.ev(`document.querySelector('${VISIBLE_TAPS[type].tap}').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true}));1`);
         await sleep(400);
@@ -59,7 +68,7 @@ const VISIBLE_TAPS = {
         assert.ok(found, `${type}: la visita guidata non mostra "${r.help}"`);
       }
       checked.push(type);
-      console.log(`ok     ${type}${VISIBLE_TAPS[type] ? ' (tocco con effetto)' : ''}`);
+      console.log(`ok     ${type}${VISIBLE_TAPS[type] || CHANGES_ON_TAP.has(type) ? ' (tocco con effetto)' : ''}`);
     }
     assert.deepEqual(p.problems, []);
     console.log(`registro dei widget: ${checked.length} tipi verificati`);

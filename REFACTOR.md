@@ -92,11 +92,20 @@ Problemi concreti visti lavorandoci:
      nascosti come dichiarato, tocco senza errori, aiuto della visita guidata
      uguale a quello registrato (piu' un tocco con effetto per `fixgrid`).
      Verificato che scatta se il registro non viene consultato.
-   - Restano negli switch 15 tipi: fader, knob, button, xy, meter, label,
-     scenes (con i suoi modi), color, timeline, clock, stage e la famiglia
-     Gaia (gaia, patchdeck, tddevice, gaiadmx, via GAIA_TYPES). I piu'
-     intrecciati sono `scenes` (molti modi), `timeline` e `stage`: vanno per
-     ultimi. Alla fine spariscono gli switch.
+   - Controlli di base in `42-control-widgets.js`: fader, knob, xy, button,
+     meter, color, label, clock: FATTI. Il registro ha in piu' `paint`
+     (disegno del valore), `valueText`, `args` (argomenti OSC) e
+     `showsValue` anche come funzione (il pulsante mostra il valore solo se
+     interruttore). Il tocco usa `startDrag()` (cattura + salvataggio a fine
+     gesto, come la parte comune di prima). `test/widget-registry.js` ora
+     tocca ogni widget con un mouse vero (CDP) e controlla che fader, pad,
+     pulsante e colore cambino valore: 12 tipi verificati.
+   - Restano negli switch: `scenes` (molti modi), `timeline`, `stage` e la
+     famiglia Gaia (gaia, patchdeck, tddevice, gaiadmx, via GAIA_TYPES).
+   - Prossima fase del registro: l'ispettore di "Modifica griglia"
+     (`renderInsp` in 41) ha ancora campi per tipo (range, modo del
+     pulsante, modalita' dell'orologio, nota dell'indicatore): diventera'
+     `spec.inspector`.
 3. **Bus dei messaggi**: OSC e MQTT in arrivo indicizzati per indirizzo e
    topic; i widget si iscrivono a cio' che ascoltano.
 4. **Involucro su `L`** (il layout condiviso resta la fonte di verita',

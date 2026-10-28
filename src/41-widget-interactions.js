@@ -4,7 +4,6 @@ function bind(el,w){
     if(editing) return editDown(e,el,w);
     if(GAIA_TYPES.has(w.type)) return gBind(e,el,w);
     const t=widgetType(w.type);if(t?.onPointer)return t.onPointer(e,el,w);
-    if(w.type==='label'||w.type==='meter'||w.type==='clock') return;
     const end=()=>{el.classList.remove('active','press');el.onpointermove=null;el.onpointerup=el.onpointercancel=null;save()};
     if(w.type==='stage'){const b=e.target.closest('[data-v]');if(b){w.view=b.dataset.v;el.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));save()}
       else if(e.target.closest('[data-act="syncall"]'))syncAllFixtures();
@@ -73,30 +72,6 @@ function bind(el,w){
       else{w.value=-2;set(w,i)}
       save(); return;
     }
-    e.preventDefault(); el.setPointerCapture(e.pointerId);
-    if(w.type==='color'){
-      const sw=e.target.closest('[data-s]');
-      if(sw){const [h,s]=rgb2hsv(...SWC[+sw.dataset.s]);w.value={h,s};paint(el,w);send(w);save();return}
-      const disc=el.querySelector('.disc'),r=disc.getBoundingClientRect();
-      const mv=ev=>{const dx=(ev.clientX-r.left)/r.width*2-1,dy=(ev.clientY-r.top)/r.height*2-1;
-        w.value={h:((Math.atan2(dy,dx)/(2*Math.PI))+1)%1,s:clamp(Math.hypot(dx,dy))};paint(el,w);send(w)};
-      el.classList.add('active'); mv(e); el.onpointermove=mv; el.onpointerup=el.onpointercancel=end; return;
-    }
-    const r=el.querySelector('.box').getBoundingClientRect();
-    if(w.type==='button'){
-      el.classList.add('press');
-      set(w, w.mode==='toggle' ? (w.value>.5?0:1) : 1);
-      el.onpointerup=el.onpointercancel=()=>{if(w.mode!=='toggle')set(w,0);end()};
-      return;
-    }
-    const s={x:e.clientX,y:e.clientY,v:w.value};
-    const move=ev=>{
-      if(w.type==='fader'){const hz=w.w>w.h; set(w,clamp(hz?(ev.clientX-r.left)/r.width:1-(ev.clientY-r.top)/r.height))}
-      else if(w.type==='knob'){set(w,clamp(s.v+((s.y-ev.clientY)+(ev.clientX-s.x)*.5)/220))}
-      else if(w.type==='xy'){setXY(w,clamp((ev.clientX-r.left)/r.width),clamp(1-(ev.clientY-r.top)/r.height))}
-    };
-    el.classList.add('active'); if(w.type!=='knob') move(e);
-    el.onpointermove=move; el.onpointerup=el.onpointercancel=end;
   });
 }
 function editDown(e,el,w){

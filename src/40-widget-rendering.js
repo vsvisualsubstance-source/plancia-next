@@ -16,13 +16,6 @@ function place(el,w){
 function inner(w){
   const t=widgetType(w.type);if(t?.inner)return t.inner(w);
   switch(w.type){
-    case 'fader': case 'meter': return '<div class="trk"><div class="fill"></div></div>';
-    case 'knob': return `<div class="knob"><svg viewBox="0 0 100 100" aria-hidden="true">
-      <path class="tr" d="M23.13 76.87A38 38 0 1 1 76.87 76.87" pathLength="100"/>
-      <path class="vl" d="M23.13 76.87A38 38 0 1 1 76.87 76.87" pathLength="100"/>
-      <circle class="cap" cx="50" cy="50" r="24"/><line class="ptr" x1="58" y1="50" x2="70" y2="50"/></svg></div>`;
-    case 'xy': return '<div class="pad"><i class="hx"></i><i class="vy"></i><i class="dot"></i></div>';
-    case 'button': return `<span class="tag">${w.mode==='toggle'?'TOG':''}</span>`;
     case 'scenes':{
       if(w.mode==='dmx-enum')return '<div class="sc"></div>';
       if(w.mode==='head-presets')return `<div class="hp">${(w.headPresets||[]).map((p,i)=>`<button data-head-preset="${i}" title="${esc(p.name)}">${esc(p.name)}</button>`).join('')}<button data-act="manage-presets">＋ Gestisci</button></div>`;
@@ -35,7 +28,6 @@ function inner(w){
       // back, preview della nota TD 37), barretta col primo colore front
       return `<div class="sc" style="grid-template-columns:repeat(${c},minmax(0,1fr))">${it.map((n,i)=>{const look=td.length?tdSceneLook(td[i]):null,ic=look?look.ic:lk&&LOOKS[i]?lookHex(i):'';
         return `<div class="si" data-i="${i}" title="${esc(n)}"${ic?` style="--ic:${ic}"`:''}><span class="no">${String(i+1).padStart(2,'0')}</span><span class="nm">${esc(n)}</span><i class="chip"></i><i class="prog"></i>${look?.grad?`<i class="pal" style="background:${look.grad}"></i>`:''}</div>`}).join('')}${manage?'<div class="si si-manage" data-act="manage-scenes" title="Crea, ricattura, rinomina ed elimina le scene di DMX Master"><span class="nm">＋ Scene…</span></div>':''}</div>${lk?'<span class="simtag" title="DMX Master non collegato: look locali della Plancia, solo simulazione">SIMULAZIONE</span>':''}`}
-    case 'color': return `<div class="cw"><div class="disc"><i class="mk"></i></div><div class="sws">${SWC.map((c,i)=>`<i data-s="${i}" style="--s:${hex(c)}"></i>`).join('')}</div></div>`;
     case 'timeline':{const cues=timelineCues(w),D=timelineDuration(w),controlled=isShowTimeline(w)&&showClock.authority;
       const sample=controlled?showClockSample():null,available=!!sample&&showClockFresh(sample),locked=controlled&&!available;
       const step=[5,10,15,30,60,120,300].find(s=>D/s<=12)||600; let ticks='';
@@ -47,18 +39,17 @@ function inner(w){
         <div class="tl-tr"><button data-act="start" aria-label="Inizio"${locked?' disabled':''}>${ICON.start}</button><button data-act="play" aria-label="Play/pausa"${locked?' disabled':''}>${ICON.play}</button><button data-act="stop" aria-label="Stop"${locked?' disabled':''}>${ICON.stop}</button><button data-act="loop" aria-label="Loop"${controlled?' disabled':''}>${ICON.loop}</button>${w.readonly?'':'<button data-act="edit-cues" aria-label="Modifica cue">CUE</button>'}</div>
         ${isShowTimeline(w)?`<button class="tl-live" data-act="live"${w.readonly?' disabled':''} title="${w.readonly?'Modalità di DMX Master: si cambia nella pagina Timeline':'LIVE: comandi tu dal tablet (per comporre e catturare le scene). TIMELINE: comanda la timeline dello show'}">—</button>`:''}<span class="tl-tc">00:00:00:00</span><span class="tl-cue"><span class="k">CUE</span><b>—</b></span><span class="tl-next"></span><span class="tl-bpm">${controlled?`TD · ${available?sample.source.toUpperCase():'OFFLINE · FERMO'}`:`${isShowTimeline(w)?'SIMULAZIONE · ':''}${w.bpm||120} BPM`} · ${Math.floor(D/60)}:${String(Math.round(D%60)).padStart(2,'0')}</span></div>
         ${isShowTimeline(w)?'<div class="tl-trk tl-trk-main"><div class="tl-vhead"><span class="k">LUCI</span></div>':''}<div class="tl-lane"><div class="tl-ruler">${ticks}</div><div class="tl-cues">${blocks}</div><div class="tl-ph"></div></div>${isShowTimeline(w)?'</div>'+videoLaneHtml(w,D)+laserLaneHtml(w,D):''}</div>`}
-    case 'clock': return '<div class="clk"><div class="clk-main">--:--:--</div><div class="clk-sub"></div></div>';
     case 'stage': return `<canvas></canvas><div class="seg"><button data-v="render" aria-pressed="${w.view!=='plot'}">Render</button><button data-v="plot" aria-pressed="${w.view==='plot'}">Pianta</button><button data-act="syncall" title="Invia a DMX Master solo le fixture patchabili DMX. È un invio separato dall'autosalvataggio del layout; LED wall escluse.">⇪ TD</button><button data-act="importtd" title="Importa da DMX Master la patch delle sole fixture DMX; le fixture non-DMX restano in Plancia.">⇩ TD</button><button data-act="resolve" title="Pulisce i doppioni DMX in TD e reimporta la patch; le fixture non-DMX restano in Plancia.">🧹 TD</button><button data-act="scenes" title="Scene di DMX Master: cattura dal vivo con categorie, richiama, ricattura, rinomina, elimina">▣ Scene</button><button data-act="stage-ai" title="Palco da descrizione: lo descrivi a parole, Ollama prepara le fixture nella Pianta">✨ AI</button><button data-act="space" title="Misure di palco, platea, regia e sala: ingombro totale dello show">📐 Spazio</button><button data-act="lamps" title="Lampade a scarica delle teste (iSpot...): accendi e spegni da DMX Master">💡 Lampade</button><button data-act="models" title="Modelli di fixture di DMX Master: canali, colore lampada, ruota colori e gobo delle teste">▤ Modelli</button><button data-act="groups" title="Gruppi DMX (rig di DMX Master): front, back, teste, LED bar, haze, blinder e rig nuovi">▦ Gruppi</button><button data-act="types" title="Invia la tassonomia dei tipi di Plancia a DMX Master (sostituisce quella attuale).">📋 TD</button></div><div class="hud"></div>`;
     default: return gInner(w);
   }
 }
-const noVal=new Set(['label','scenes','timeline','clock','stage','color','gaia','patchdeck','tddevice','gaiadmx']);
-const showVal=w=>{const t=widgetType(w.type);if(t)return t.showsValue;return w.type==='color'||(!noVal.has(w.type)&&!(w.type==='button'&&w.mode!=='toggle'))};
+const noVal=new Set(['scenes','timeline','stage','gaia','patchdeck','tddevice','gaiadmx']);
+const showVal=w=>{const t=widgetType(w.type);if(t)return typeof t.showsValue==='function'?t.showsValue(w):t.showsValue;return!noVal.has(w.type)};
 function build(w){
   const el=document.createElement('div');
   el.className='w t-'+w.type+(selId===w.id?' sel':''); el.dataset.id=w.id;
   el.style.setProperty('--c',w.color);
-  const t=widgetType(w.type),addr=(t?!t.showsAddr:['label','stage','clock'].includes(w.type))||GAIA_TYPES.has(w.type)||(w.type==='scenes'&&w.mode==='dmx-enum')?'':(w.addr||'nessun indirizzo');
+  const t=widgetType(w.type),addr=(t?!t.showsAddr:w.type==='stage')||GAIA_TYPES.has(w.type)||(w.type==='scenes'&&w.mode==='dmx-enum')?'':(w.addr||'nessun indirizzo');
   el.innerHTML=`<div class="box">${inner(w)}<span class="lab">${esc(w.label)}</span><span class="addr">${esc(addr)}</span>${showVal(w)?'<span class="val"></span>':''}</div><span class="rs"></span>`;
   place(el,w); paint(el,w); bind(el,w);
   if(w.type==='stage'||w.type==='gaia')sizeCanvas(el);
@@ -68,28 +59,14 @@ function build(w){
 function paint(el,w){
   if(!el) return;
   if(GAIA_TYPES.has(w.type))return gPaint(el,w);
-  const v=w.value, val=el.querySelector('.val');
-  if(w.type==='fader'||w.type==='meter'){
-    const f=el.querySelector('.fill'); if(w.w>w.h){f.style.width=v*100+'%';f.style.height=''}else{f.style.height=v*100+'%';f.style.width=''}
-  }else if(w.type==='knob'){
-    el.querySelector('.vl').style.strokeDasharray=`${v*100} 100`;
-    el.querySelector('.ptr').setAttribute('transform',`rotate(${135+270*v} 50 50)`);
-  }else if(w.type==='xy'){
-    const X=v*100+'%', Y=(1-w.valueY)*100+'%';
-    const d=el.querySelector('.dot'); d.style.left=X; d.style.top=Y;
-    el.querySelector('.hx').style.top=Y; el.querySelector('.vy').style.left=X;
-  }else if(w.type==='button'){
-    el.classList.toggle('on',v>.5);
-  }else if(w.type==='scenes'){
+  const val=el.querySelector('.val'),t=widgetType(w.type);
+  if(t){t.paint?.(el,w);if(val)val.textContent=t.valueText?t.valueText(w):fmt(out(w,w.value));return}
+  const v=w.value;
+  if(w.type==='scenes'){
     if(w.mode==='dmx-enum')paintTdEnum(el,w);
     else el.querySelectorAll('.si').forEach((n,i)=>n.classList.toggle('on',w.mode==='multi'||w.mode==='head-select'?!!(Array.isArray(v)&&+v[i]):v===i));
-  }else if(w.type==='color'){
-    const h=v?.h??0,s=v?.s??0,mk=el.querySelector('.mk');
-    mk.style.left=50+Math.cos(h*2*Math.PI)*s*50+'%'; mk.style.top=50+Math.sin(h*2*Math.PI)*s*50+'%';
-    mk.style.background=hex(hsv2rgb(h,s,1));
   }
-  if(val) val.textContent = w.type==='xy' ? fmt(out(w,v))+' · '+fmt(out(w,w.valueY))
-    : w.type==='button' ? (v>.5?'ON':'OFF') : w.type==='color' ? hex(colorRGB(w)).toUpperCase() : fmt(out(w,v));
+  if(val) val.textContent=fmt(out(w,v));
 }
 const elOf=id=>stage.querySelector(`[data-id="${id}"]`);
 function renderStage(){
@@ -118,14 +95,13 @@ function render(){document.body.classList.toggle('editing',editing);$('#addbar')
   renderTabs();renderStage();renderInsp();syncHeadSelectors()}
 
 /* ---------- invio OSC ---------- */
+// argomenti OSC: quelli dichiarati dal tipo (registro), altrimenti il valore nel suo range
 function argsOf(w){
+  const t=widgetType(w.type);if(t?.args)return t.args(w);
   switch(w.type){
-    case 'xy': return [out(w,w.value),out(w,w.valueY)];
-    case 'button': return [w.value>.5?w.max:w.min];
     case 'scenes':
       if(w.mode==='head-select'&&w.addr==='/mh/select/heads')return (w.headValues||[]).filter((_,i)=>!!w.value?.[i]);
       return w.mode==='multi'?(w.value||[]).map(x=>+x?1:0):[w.value];
-    case 'color': return colorRGB(w).map(x=>+x.toFixed(4));
     default: return [out(w,w.value)];
   }
 }

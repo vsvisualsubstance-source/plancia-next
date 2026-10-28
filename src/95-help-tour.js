@@ -22,9 +22,6 @@ function helpForWidget(w){
   switch(w.type){
     case 'stage':return['Palco','Render: come escono le luci (colori reali da DMX Master). Pianta: posizioni e patch, tocca una luce per nome, indirizzo, modello e colore. In alto: 📐 Spazio = misure di palco, platea, regia e sala; ⇪/⇩ TD scambiano la patch, ▣ Scene, ▤ Modelli (libreria), ▦ Gruppi, 💡 Lampade, ✨ AI.'];
     case 'timeline':return['Timeline dello show',w.readonly?'Segue l\'orologio dello show di DMX Master. LIVE/TIMELINE dice chi comanda le luci: in TIMELINE vanno da sole con le cue, in LIVE comandi tu.':'Le cue dello show: tocca un blocco per modificarlo, "Cue" per l\'editor (scena e fade di ogni cue). Play/stop/inizio comandano l\'orologio. Sotto, la corsia VIDEO per PatchDeck.'];
-    case 'clock':return[w.mode==='show'?'Orologio dello show':w.mode==='countdown'?'Conto alla rovescia':'Ora','Tempo dello show (timecode 25 fps) che arriva da DMX Master. Se dice OFFLINE l\'orologio è fermo.'];
-    case 'color':return['Colore',a.startsWith('/mh')?'Colore delle teste selezionate (ruota o RGB secondo il modello).':'Colore del LED wall.'];
-    case 'xy':return['Pan / Tilt','Trascina per puntare le teste selezionate.'];
     case 'scenes':
       if(w.mode==='dmx-enum')return['Palette del rig','Il colore di tutto il gruppo (rig). Per una luce sola usa la pagina Luci.'];
       if(w.mode==='head-select')return['Selezione teste','Scegli quali teste comandare con i controlli della pagina.'];
@@ -34,19 +31,6 @@ function helpForWidget(w){
       if(a==='/mh/position')return['Posizioni teste','Posizioni pronte per le teste selezionate.'];
       if(a.startsWith('/mh/gobo'))return['Gobo','Il disegno proiettato dalle teste.'];
       return['Scelte',`Tocca per scegliere (${a||'nessun indirizzo'}).`];
-    case 'fader':
-      if(a==='/dmx/master')return['Master','Livello generale di tutte le luci.'];
-      if(a==='/dmx/fade')return['Fade','Secondi di dissolvenza quando cambi scena.'];
-      if(a==='/dmx/strobe/rate')return['Velocità strobo','Lampi al secondo dello strobo.'];
-      if(a.startsWith('/dmx/group/'))return[`Gruppo ${w.label}`,'Livello di questo gruppo di luci (rig), sopra al master.'];
-      if(a.startsWith('/mh/'))return[w.label,'Valore per le teste selezionate.'];
-      return[w.label||'Fader',`Trascina su e giù (${a||'nessun indirizzo'}).`];
-    case 'button':
-      if(a==='/dmx/blackout')return['Blackout','Spegne tutto finché non lo ritocchi.'];
-      if(a==='/dmx/strobe')return[w.label,w.mode==='toggle'?'Strobo acceso/spento.':'Strobo solo finché tieni premuto.'];
-      if(a==='/show/go')return['GO','Manda la prossima cue della timeline.'];
-      if(a==='/show/back')return['Back','Torna alla cue precedente della timeline.'];
-      return[w.label||'Pulsante',w.mode==='toggle'?'Acceso/spento a ogni tocco.':'Attivo finché tieni premuto.'];
     default:return[w.label||NAMES[w.type]||w.type,GAIA_TYPES.has(w.type)?'Controllo di Gaia / TouchDesigner via MQTT.':`Indirizzo ${a||'—'}.`];
   }
 }

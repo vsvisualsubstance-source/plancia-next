@@ -6,8 +6,10 @@
 //
 //   registerWidget('laser',{
 //     size:[8,6], label:'Laser',            // dimensioni di default e nome nel menu
-//     showsValue:false, showsAddr:false,    // valore e indirizzo OSC sotto l'etichetta
+//     showsValue:false, showsAddr:false,    // valore e indirizzo OSC sotto l'etichetta (anche w=>bool)
 //     inner:w=>html,                        // contenuto del widget
+//     paint:(el,w)=>…, valueText:w=>testo,  // disegno del valore e testo sotto l'etichetta
+//     args:w=>[…],                          // argomenti OSC (default: il valore nel range min..max)
 //     onPointer:(e,el,w)=>…,                // tocco fuori da "Modifica griglia"
 //     tick:(el,w,{repaint,now})=>…,         // a ogni fotogramma; repaint = dati cambiati o 1 s
 //     help:w=>[titolo,testo]});             // passo della visita guidata "?"
