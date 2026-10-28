@@ -1,7 +1,7 @@
 const COLS=16, ROWS=10;
 const SWATCH=['#ffb23e','#3ec9ff','#ff5fa2','#9be15d','#b18cff','#e9ebef'];
-const DEF={scenes:[4,3]}; // + i tipi registrati (05-widget-registry.js)
-const NAMES={scenes:'Scene'};
+const DEF={}; // + i tipi registrati (05-widget-registry.js)
+const NAMES={};
 const KEY='plancia.layout.v3', CKEY='plancia.conn.v1';
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);

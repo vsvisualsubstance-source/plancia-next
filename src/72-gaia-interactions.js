@@ -38,7 +38,7 @@ document.addEventListener('submit',e=>{const f=e.target.closest('.ga-in');if(!f)
 // funzioni comuni della famiglia (gInner, gPaint, gBind in 71/72).
 // spec comune della famiglia; il widget gaia ha in piu' un canvas (orbita animata)
 // e un'impaginazione stretta sotto 8 colonne
-const gaiaWidget=(size,label,extra={})=>({size,label,showsValue:false,showsAddr:false,
+const gaiaWidget=(size,label,extra={})=>({size,label,showsValue:false,showsAddr:false,refreshOnResize:true,
   inner:gInner,paint:gPaint,onPointer:gBind,
   help:w=>[w.label||NAMES[w.type]||w.type,'Controllo di Gaia / TouchDesigner via MQTT.'],
   tick:(el,w,{repaint})=>{if(repaint)gPaint(el,w)},...extra});

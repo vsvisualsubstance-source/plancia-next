@@ -115,7 +115,11 @@ Problemi concreti visti lavorandoci:
      le tracce, tocco su trasporto/cue/traccia, aggiornamento a ogni
      fotogramma). Il MOTORE che fa avanzare il tempo e manda le cue resta nel
      loop (80) e in 30-show-engine.js: e' il passo 4. 18 tipi verificati.
-   - Resta negli switch solo `scenes` (sei modi).
+   - `scenes`: FATTO, modulo `44-scene-widgets.js` (i sei modi smistati dentro
+     il tipo); `showsAddr` come funzione (palette dei rig senza indirizzo),
+     flag `refreshOnResize` (scenes e famiglia Gaia, ricostruiti quando si
+     ridimensionano in Modifica griglia). 19 tipi verificati, tocco su una
+     voce che si accende. Nessun tipo e' piu' negli switch.
    - Prossima fase del registro: l'ispettore di "Modifica griglia"
      (`renderInsp` in 41) ha ancora campi per tipo (range, modo del
      pulsante, modalita' dell'orologio, nota dell'indicatore): diventera'

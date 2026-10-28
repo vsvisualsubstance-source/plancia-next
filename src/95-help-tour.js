@@ -20,15 +20,6 @@ function helpForWidget(w){
   const t=widgetType(w.type);if(t?.help)return t.help(w);
   const a=w.addr||'';
   switch(w.type){
-    case 'scenes':
-      if(w.mode==='dmx-enum')return['Palette del rig','Il colore di tutto il gruppo (rig). Per una luce sola usa la pagina Luci.'];
-      if(w.mode==='head-select')return['Selezione teste','Scegli quali teste comandare con i controlli della pagina.'];
-      if(w.mode==='head-presets')return['Preset teste','Posizioni e stati salvati delle teste: "Gestisci" per crearli.'];
-      if(a==='/dmx/scene')return['Scene di DMX Master','Tocca una scena per richiamarla (con il fade impostato). "＋ Scene…" per catturare lo stato attuale, ricatturare, rinominare o eliminare.'];
-      if(a==='/dmx/chase')return['Chase','Come si muovono i colori nei rig: lento, veloce, a tempo di musica…'];
-      if(a==='/mh/position')return['Posizioni teste','Posizioni pronte per le teste selezionate.'];
-      if(a.startsWith('/mh/gobo'))return['Gobo','Il disegno proiettato dalle teste.'];
-      return['Scelte',`Tocca per scegliere (${a||'nessun indirizzo'}).`];
     default:return[w.label||NAMES[w.type]||w.type,`Indirizzo ${a||'—'}.`];
   }
 }

@@ -3,27 +3,6 @@ function bind(el,w){
   el.addEventListener('pointerdown',e=>{
     if(editing) return editDown(e,el,w);
     const t=widgetType(w.type);if(t?.onPointer)return t.onPointer(e,el,w);
-    if(w.type==='scenes'){
-      if(e.target.closest('[data-act="manage-scenes"]')){e.preventDefault();openSceneEditor();return}
-      if(w.mode==='head-presets'){
-        const manage=e.target.closest('[data-act="manage-presets"]'),preset=e.target.closest('[data-head-preset]');
-        if(manage){e.preventDefault();openHeadPresetEditor(w);return}
-        if(preset){e.preventDefault();recallHeadPreset(w,+preset.dataset.headPreset);return}
-        return;
-      }
-      const it=e.target.closest('[data-i]'); if(!it)return; e.preventDefault(); const i=+it.dataset.i;
-      if(w.mode==='dmx-enum'){
-        const info=tdEnumInfo(w),option=info.meta?.options?.[i];
-        if(!info.id){showError('Nessun device DMX V8 pubblicato.');return}
-        if(!info.meta||option===undefined){showError('Il parametro enum DMX V8 non è disponibile.');return}
-        setDmxParam(info.id,info.meta.n,String(option));return;
-      }
-      if(w.mode==='multi'||w.mode==='head-select'){const a=items(w).map((_,k)=>Array.isArray(w.value)?(+w.value[k]||0):0);a[i]=a[i]?0:1;w.value=a;
-        if(w.mode==='head-select')w.selectedHeads=(w.headValues||[]).filter((_,k)=>!!a[k]);
-        paint(el,w);send(w)}
-      else{w.value=-2;set(w,i)}
-      save(); return;
-    }
   });
 }
 function editDown(e,el,w){
@@ -37,7 +16,7 @@ function editDown(e,el,w){
     else{w.x=clamp(s.x+dx,0,COLS-w.w);w.y=clamp(s.y+dy,0,ROWS-w.h)}
     place(el,w); paint(el,w);
   };
-  el.onpointerup=el.onpointercancel=()=>{el.onpointermove=el.onpointerup=el.onpointercancel=null;save();if((w.type==='scenes'||GAIA_TYPES.has(w.type))&&rz)refresh(w)};
+  el.onpointerup=el.onpointercancel=()=>{el.onpointermove=el.onpointerup=el.onpointercancel=null;save();if(rz&&widgetType(w.type)?.refreshOnResize)refresh(w)};
 }
 stage.addEventListener('pointerdown',e=>{if(editing&&e.target===stage)select(null)});
 function select(id){selId=id;stage.querySelectorAll('.w').forEach(n=>n.classList.toggle('sel',n.dataset.id===id));renderInsp()}

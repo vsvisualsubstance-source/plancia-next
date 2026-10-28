@@ -12,6 +12,7 @@ const { startPlancia, sleep } = require('./browser-harness');
 // tocchi con effetto verificabile anche in simulazione (senza DMX Master)
 const VISIBLE_TAPS = {
   fixgrid: { tap: '[data-fg-filter="mh"]', expect: `document.querySelector('[data-fg-filter="mh"]')?.classList.contains('on')` },
+  scenes: { tap: '.t-scenes .si[data-i="1"]', expect: `document.querySelector('.t-scenes .si[data-i="1"]')?.classList.contains('on')` },
   stage: { tap: '.t-stage [data-v="plot"]', expect: `document.querySelector('.t-stage [data-v="plot"]')?.getAttribute('aria-pressed')==='true'` },
 };
 

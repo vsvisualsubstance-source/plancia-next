@@ -14,7 +14,8 @@
 //     onPointer:(e,el,w)=>…,                // tocco fuori da "Modifica griglia"
 //     tick:(el,w,{repaint,now,level})=>…,   // a ogni fotogramma; repaint = dati cambiati o 1 s,
 //                                           // level = pulsazione dello show (per il Render)
-//     help:w=>[titolo,testo]});             // passo della visita guidata "?"
+//     help:w=>[titolo,testo],               // passo della visita guidata "?"
+//     refreshOnResize:true});               // ricostruito quando lo si ridimensiona in Modifica griglia
 //
 // La registrazione avviene quando il modulo del widget viene valutato: tutto
 // cio' che la usa gira dopo init() (src/999-start.js).

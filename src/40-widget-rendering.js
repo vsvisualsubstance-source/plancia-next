@@ -16,28 +16,15 @@ function place(el,w){
 function inner(w){
   const t=widgetType(w.type);if(t?.inner)return t.inner(w);
   switch(w.type){
-    case 'scenes':{
-      if(w.mode==='dmx-enum')return '<div class="sc"></div>';
-      if(w.mode==='head-presets')return `<div class="hp">${(w.headPresets||[]).map((p,i)=>`<button data-head-preset="${i}" title="${esc(p.name)}">${esc(p.name)}</button>`).join('')}<button data-act="manage-presets">＋ Gestisci</button></div>`;
-      // /dmx/scene con DMX Master: le scene vere di TD (catalogo), senza i
-      // colori dei LOOKS locali, che con TD non corrispondono a niente
-      const td=w.addr==='/dmx/scene'&&(!w.mode||w.mode==='push')?tdScenes():[];
-      const it=td.length?td.map(s=>s.label||s.id):items(w),manage=w.addr==='/dmx/scene'&&(!w.mode||w.mode==='push')&&Array.isArray(tdParams().show_scene_catalog),c=colsOf(w,it.length+(manage?1:0)),lk=w.addr==='/dmx/scene'&&!td.length;
-      if(w.mode==='head-select'&&!it.length)return '<div class="dv-empty">In attesa delle teste mobili pubblicate da DMX Master.</div>';
-      // scene di TD: striscia con le palette salvate nella scena (front |
-      // back, preview della nota TD 37), barretta col primo colore front
-      return `<div class="sc" style="grid-template-columns:repeat(${c},minmax(0,1fr))">${it.map((n,i)=>{const look=td.length?tdSceneLook(td[i]):null,ic=look?look.ic:lk&&LOOKS[i]?lookHex(i):'';
-        return `<div class="si" data-i="${i}" title="${esc(n)}"${ic?` style="--ic:${ic}"`:''}><span class="no">${String(i+1).padStart(2,'0')}</span><span class="nm">${esc(n)}</span><i class="chip"></i><i class="prog"></i>${look?.grad?`<i class="pal" style="background:${look.grad}"></i>`:''}</div>`}).join('')}${manage?'<div class="si si-manage" data-act="manage-scenes" title="Crea, ricattura, rinomina ed elimina le scene di DMX Master"><span class="nm">＋ Scene…</span></div>':''}</div>${lk?'<span class="simtag" title="DMX Master non collegato: look locali della Plancia, solo simulazione">SIMULAZIONE</span>':''}`}
     default: return gInner(w);
   }
 }
-const noVal=new Set(['scenes']);
-const showVal=w=>{const t=widgetType(w.type);if(t)return typeof t.showsValue==='function'?t.showsValue(w):t.showsValue;return!noVal.has(w.type)};
+const showVal=w=>{const t=widgetType(w.type);if(t)return typeof t.showsValue==='function'?t.showsValue(w):t.showsValue;return true};
 function build(w){
   const el=document.createElement('div');
   el.className='w t-'+w.type+(selId===w.id?' sel':''); el.dataset.id=w.id;
   el.style.setProperty('--c',w.color);
-  const t=widgetType(w.type),addr=(t&&!t.showsAddr)||(w.type==='scenes'&&w.mode==='dmx-enum')?'':(w.addr||'nessun indirizzo');
+  const t=widgetType(w.type),addr=t&&!(typeof t.showsAddr==='function'?t.showsAddr(w):t.showsAddr)?'':(w.addr||'nessun indirizzo');
   el.innerHTML=`<div class="box">${inner(w)}<span class="lab">${esc(w.label)}</span><span class="addr">${esc(addr)}</span>${showVal(w)?'<span class="val"></span>':''}</div><span class="rs"></span>`;
   place(el,w); paint(el,w); bind(el,w);
   if(t?.mounted)t.mounted(el,w);
@@ -48,10 +35,6 @@ function paint(el,w){
   const val=el.querySelector('.val'),t=widgetType(w.type);
   if(t){t.paint?.(el,w);if(val)val.textContent=t.valueText?t.valueText(w):fmt(out(w,w.value));return}
   const v=w.value;
-  if(w.type==='scenes'){
-    if(w.mode==='dmx-enum')paintTdEnum(el,w);
-    else el.querySelectorAll('.si').forEach((n,i)=>n.classList.toggle('on',w.mode==='multi'||w.mode==='head-select'?!!(Array.isArray(v)&&+v[i]):v===i));
-  }
   if(val) val.textContent=fmt(out(w,v));
 }
 const elOf=id=>stage.querySelector(`[data-id="${id}"]`);
@@ -85,9 +68,6 @@ function render(){document.body.classList.toggle('editing',editing);$('#addbar')
 function argsOf(w){
   const t=widgetType(w.type);if(t?.args)return t.args(w);
   switch(w.type){
-    case 'scenes':
-      if(w.mode==='head-select'&&w.addr==='/mh/select/heads')return (w.headValues||[]).filter((_,i)=>!!w.value?.[i]);
-      return w.mode==='multi'?(w.value||[]).map(x=>+x?1:0):[w.value];
     default: return [out(w,w.value)];
   }
 }
