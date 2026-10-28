@@ -69,8 +69,13 @@ Problemi concreti visti lavorandoci:
      Un cambio voluto si registra con `npm run characterize -- --update`.
    - `npm run check` = test unitari + caratterizzazione + smoke: da lanciare
      prima di ogni commit del refactor.
-1. **Avvio esplicito**: `init()` chiamato in fondo al bundle; nessun
-   effetto collaterale durante la valutazione dei moduli.
+1. **Avvio esplicito** — FATTO: la riga di avvio (migrazioni, primo
+   `render()`, connessioni, loop) e' la funzione `init()` di
+   `90-settings-and-bootstrap.js`, chiamata da `src/999-start.js`, ultimo
+   modulo del bundle. Da qui in poi una funzione usata dal render puo' essere
+   anche `const`. Restano a livello di modulo solo dichiarazioni, listener e
+   timer (verificato modulo per modulo). Un test impedisce di tornare indietro.
+   Caratterizzazione identica, smoke 13/0.
 2. **Registro dei widget**: per tipo `{defaults, label, build, paint,
    onPointer, tick, help}`. Pilota su `laser`, `audiorigs`, `fixgrid`; poi
    un tipo per commit. Alla fine spariscono gli switch.

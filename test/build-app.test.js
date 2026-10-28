@@ -23,12 +23,13 @@ test('app bundle preserves module order and parses as one client scope', () => {
     '/* ---------- simulazione:',
     '/* ---------- ciclo principale ---------- */',
     '/* ---------- impostazioni e template ---------- */',
-    'migrateLegacyHeadSelectors();migrateHeadPresetWidgets();migrateUiShowTimeline();migrateUiConsolePages();migrateUiAudioPage();migrateUiNoChase();migrateUiOneDmxV8();migrateUiLaserPage();migrateUiLaserScenes();render();'
+    'migrateLegacyHeadSelectors();migrateHeadPresetWidgets();migrateUiShowTimeline();migrateUiConsolePages();migrateUiAudioPage();migrateUiNoChase();migrateUiOneDmxV8();migrateUiLaserPage();migrateUiLaserScenes();render();',
+    '/* ---------- avvio ---------- */'
   ].map(marker => bundle.indexOf(marker));
 
   assert.equal(bundle.startsWith('(()=>{\n'), true);
   assert.equal(bundle.endsWith('\n})();\n'), true);
-  assert.equal(appModules.length, 33);
+  assert.equal(appModules.length, 34);
   assert.equal(positions.every(position => position >= 0), true);
   assert.deepEqual(positions, [...positions].sort((a, b) => a - b));
   assert.doesNotThrow(() => new vm.Script(bundle));
@@ -49,4 +50,13 @@ test('Plancia opened on OPS itself talks to localhost (no hairpin on its own LAN
   assert.equal(local.video, '192.168.1.240');   // servizi Windows: l'IP di LAN funziona
   assert.equal(netLocalize(ops, false).broker, '192.168.1.240');   // tablet in rete: invariato
   assert.equal(netLocalize({ broker: '192.168.1.142' }, true).broker, '192.168.1.142');
+});
+
+test('the app starts only from the last module, after every module has been evaluated', () => {
+  const fs = require('node:fs'), path = require('node:path');
+  const src = f => fs.readFileSync(path.join(__dirname, '..', 'src', f), 'utf8');
+  assert.equal(appModules[appModules.length - 1], '999-start.js');
+  assert.match(src('999-start.js'), /^init\(\);$/m);
+  // nessuna chiamata di avvio a livello di modulo nel vecchio punto di partenza
+  assert.doesNotMatch(src('90-settings-and-bootstrap.js'), /^migrateLegacyHeadSelectors\(\);/m);
 });

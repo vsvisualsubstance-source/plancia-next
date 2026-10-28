@@ -37,7 +37,8 @@ const appModules = [
   '97-stage-space.js',
   '98-device-panel.js',
   '99-laser.js',
-  '99-laser-scenes.js'
+  '99-laser-scenes.js',
+  '999-start.js'
 ];
 
 // Solo per la build di test (test/browser-harness.js): espone al browser headless
