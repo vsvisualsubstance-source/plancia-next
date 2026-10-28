@@ -68,8 +68,8 @@ test('registered widget types live only in their module, not in the old dispatch
   const registered = [...all.matchAll(/registerWidget\('([^']+)'/g)].map(m => m[1]);
   for (const t of ['laser', 'fixgrid', 'cuestack', 'audiorigs', 'fader', 'knob', 'xy', 'button', 'meter', 'color', 'label', 'clock', 'gaia', 'patchdeck', 'tddevice', 'gaiadmx', 'stage', 'timeline', 'scenes']) assert.ok(registered.includes(t), t);
   const dispatch = ['00-core-state.js', '40-widget-rendering.js', '41-widget-interactions.js', '80-animation-loop.js', '95-help-tour.js'];
-  // l'ispettore di "Modifica griglia" (renderInsp in 41) e' la prossima fase: si controlla solo bind()
-  const only41 = s => s.slice(s.indexOf('function bind('), s.indexOf('function editDown('));
+  // in 41: bind() (tocco) e renderInsp() (ispettore di Modifica griglia)
+  const only41 = s => s.slice(s.indexOf('function bind('), s.indexOf('function editDown(')) + s.slice(s.indexOf('function renderInsp('), s.indexOf('function removeW('));
   for (const type of registered) for (const f of dispatch) {
     const s = fs.readFileSync(path.join(dir, f), 'utf8');
     // usato come tipo di widget: ==='x', case 'x', elemento di un elenco ['x', ...] (non createElement('button'))

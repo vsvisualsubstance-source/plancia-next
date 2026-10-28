@@ -120,10 +120,14 @@ Problemi concreti visti lavorandoci:
      flag `refreshOnResize` (scenes e famiglia Gaia, ricostruiti quando si
      ridimensionano in Modifica griglia). 19 tipi verificati, tocco su una
      voce che si accende. Nessun tipo e' piu' negli switch.
-   - Prossima fase del registro: l'ispettore di "Modifica griglia"
-     (`renderInsp` in 41) ha ancora campi per tipo (range, modo del
-     pulsante, modalita' dell'orologio, nota dell'indicatore): diventera'
-     `spec.inspector`.
+   - Ispettore di "Modifica griglia": FATTO. `renderInsp` tiene la parte
+     comune (etichetta, indirizzo, canale, range, MIDI, colore, duplica/elimina)
+     guidata da `oscAddress`, `addrLabel`, `range`, `midi`; la parte del tipo e'
+     `spec.inspector = {html, bind, footer}` nei moduli dei tipi. `GAIA_TYPES`
+     non esiste piu'. Prima di spostarlo la caratterizzazione ha fotografato
+     l'ispettore (22 varianti, HTML e valori): identico dopo. `test/inspector.js`
+     modifica un campo per tipo e controlla che arrivi al widget (verificato
+     che scatta).
 3. **Bus dei messaggi**: OSC e MQTT in arrivo indicizzati per indirizzo e
    topic; i widget si iscrivono a cio' che ascoltano.
 4. **Involucro su `L`** (il layout condiviso resta la fonte di verita',

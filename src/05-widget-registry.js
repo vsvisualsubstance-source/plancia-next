@@ -15,7 +15,10 @@
 //     tick:(el,w,{repaint,now,level})=>…,   // a ogni fotogramma; repaint = dati cambiati o 1 s,
 //                                           // level = pulsazione dello show (per il Render)
 //     help:w=>[titolo,testo],               // passo della visita guidata "?"
-//     refreshOnResize:true});               // ricostruito quando lo si ridimensiona in Modifica griglia
+//     refreshOnResize:true,                 // ricostruito quando lo si ridimensiona in Modifica griglia
+//     oscAddress:true, addrLabel:'…',       // indirizzo OSC modificabile nell'ispettore (anche w=>bool)
+//     range:true|{min,max}, midi:true,      // campi min/max (con etichette) e MIDI CC nell'ispettore
+//     inspector:{html:w=>…, bind:(w,{on,val})=>…, footer:w=>…}}); // campi propri nell'ispettore
 //
 // La registrazione avviene quando il modulo del widget viene valutato: tutto
 // cio' che la usa gira dopo init() (src/999-start.js).

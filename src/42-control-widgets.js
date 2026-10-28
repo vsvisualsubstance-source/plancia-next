@@ -16,7 +16,7 @@ function paintTrack(el,w){
 }
 const ignorePointer=()=>{};
 
-registerWidget('fader',{size:[2,5],label:'Fader',
+registerWidget('fader',{range:true,midi:true,size:[2,5],label:'Fader',
   inner:()=>TRACK_HTML,paint:paintTrack,
   onPointer(e,el,w){
     const end=startDrag(el,e),r=el.querySelector('.box').getBoundingClientRect();
@@ -32,10 +32,12 @@ registerWidget('fader',{size:[2,5],label:'Fader',
     return[w.label||'Fader',`Trascina su e giù (${a||'nessun indirizzo'}).`];
   }});
 
-registerWidget('meter',{size:[1,5],label:'Indicatore',
+registerWidget('meter',{range:true,
+  inspector:{footer:()=>'<p class="hint">L\'indicatore riceve soltanto: si muove quando arriva OSC su questo indirizzo.</p>'},
+  size:[1,5],label:'Indicatore',
   inner:()=>TRACK_HTML,paint:paintTrack,onPointer:ignorePointer});
 
-registerWidget('knob',{size:[2,2],label:'Manopola',
+registerWidget('knob',{range:true,midi:true,size:[2,2],label:'Manopola',
   inner:()=>`<div class="knob"><svg viewBox="0 0 100 100" aria-hidden="true">
       <path class="tr" d="M23.13 76.87A38 38 0 1 1 76.87 76.87" pathLength="100"/>
       <path class="vl" d="M23.13 76.87A38 38 0 1 1 76.87 76.87" pathLength="100"/>
@@ -52,7 +54,7 @@ registerWidget('knob',{size:[2,2],label:'Manopola',
     el.onpointerup=el.onpointercancel=end;
   }});
 
-registerWidget('xy',{size:[4,4],label:'Pad XY',
+registerWidget('xy',{range:true,size:[4,4],label:'Pad XY',
   inner:()=>'<div class="pad"><i class="hx"></i><i class="vy"></i><i class="dot"></i></div>',
   paint(el,w){
     const X=w.value*100+'%',Y=(1-w.valueY)*100+'%',d=el.querySelector('.dot');
@@ -68,7 +70,10 @@ registerWidget('xy',{size:[4,4],label:'Pad XY',
   },
   help:()=>['Pan / Tilt','Trascina per puntare le teste selezionate.']});
 
-registerWidget('button',{size:[2,2],label:'Pulsante',
+registerWidget('button',{oscAddress:true,range:{min:'Valore OFF',max:'Valore ON'},midi:true,
+  inspector:{html:w=>`<label>Comportamento<select id="fMode"><option value="push">Momentaneo</option><option value="toggle">Interruttore</option></select></label>`,
+    bind:(w,{on,val})=>{val('#fMode',w.mode);on('#fMode',v=>{w.mode=v;w.value=0},'change')}},
+  size:[2,2],label:'Pulsante',
   showsValue:w=>w.mode==='toggle',
   inner:w=>`<span class="tag">${w.mode==='toggle'?'TOG':''}</span>`,
   paint:(el,w)=>el.classList.toggle('on',w.value>.5),
@@ -109,10 +114,14 @@ registerWidget('color',{size:[4,4],label:'Colore',
   },
   help:w=>['Colore',(w.addr||'').startsWith('/mh')?'Colore delle teste selezionate (ruota o RGB secondo il modello).':'Colore del LED wall.']});
 
-registerWidget('label',{size:[4,1],label:'Testo',showsValue:false,showsAddr:false,
+registerWidget('label',{oscAddress:false,size:[4,1],label:'Testo',showsValue:false,showsAddr:false,
   inner:()=>'',onPointer:ignorePointer});
 
-registerWidget('clock',{size:[4,2],label:'Orologio',showsValue:false,showsAddr:false,
+registerWidget('clock',{oscAddress:false,
+  inspector:{html:()=>`<label>Modalità<select id="fCMode"><option value="tod">Ora del giorno</option><option value="show">Timecode show (25 fps)</option><option value="countdown">Countdown a orario</option></select></label>
+      <label>Orario di fine<input id="fTarget" type="time"></label>`,
+    bind:(w,{on,val})=>{val('#fCMode',w.mode);val('#fTarget',w.target||'23:30');on('#fCMode',v=>w.mode=v,'change');on('#fTarget',v=>w.target=v)}},
+  size:[4,2],label:'Orologio',showsValue:false,showsAddr:false,
   inner:()=>'<div class="clk"><div class="clk-main">--:--:--</div><div class="clk-sub"></div></div>',
   onPointer:ignorePointer,
   // ora, conto alla rovescia verso w.target, o timecode dello show (da DMX Master se c'e')

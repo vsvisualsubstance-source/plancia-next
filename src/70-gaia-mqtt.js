@@ -107,7 +107,6 @@ const MOOD_INKS={neutra:[0,255,204],calm:[80,230,190],stress:[255,115,85],social
 const MOOD_ALIAS={serena:'calm',sofferente:'stress',instabile:'stress',viva:'social',stabile:'neutra',neutrale:'neutra'};
 const MOOD_IT={neutra:'Neutra',calm:'Calma',stress:'Stress',social:'Sociale',curiosity:'Curiosità'};
 const DIMS=[['stress','Stress',1],['calm','Calma',1],['social','Socialità',1],['curiosity','Curiosità',1],['energy','Energia',100]];
-const GAIA_TYPES=new Set(['gaia','patchdeck','tddevice','gaiadmx']);
 const FAM_IT={patchdeck:'PatchDeck',mixeraudio:'Controller',dmx:'DMX V8',laser:'Laser'};
 
 function gLoadLib(cb){

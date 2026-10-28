@@ -57,112 +57,32 @@ function renderInsp(){
       L.pages.splice(pi,1);pi=Math.max(0,pi-1);save();render()};
     return;
   }
-  const T=w.type, hasAddr=!['label','stage','clock'].includes(T)&&!GAIA_TYPES.has(T)&&!(T==='scenes'&&['dmx-enum','head-presets'].includes(w.mode)), hasRange=['fader','knob','xy','meter','button'].includes(T), hasMidi=['fader','knob','button'].includes(T);
+  // parte comune dell'ispettore; quella del tipo viene dal registro (spec.inspector)
+  const T=w.type,spec=widgetType(T)||{},flag=v=>typeof v==='function'?v(w):!!v;
+  const hasAddr=flag(spec.oscAddress??true),hasRange=!!spec.range,hasMidi=!!spec.midi,ins=spec.inspector||{};
+  const rangeLabels=typeof spec.range==='object'?spec.range:{min:'Min',max:'Max'};
   const gaiaOscAddress=String(w.addr||'').startsWith('/gaia/');
   const missingOscChannel=w.oscChannel&&!C.oscChannels.some(c=>c.id===w.oscChannel);
-  const enumDevice=T==='scenes'?(w.device||pickDev(w,'dmx')||''):'';
-  const availableEnums=enumParams(enumDevice);
-  const deviceOptions=T==='tddevice'?devIds(w.fam||''):devIds('');
   insp.innerHTML=`<h3>${NAMES[T]}</h3>
     <label>Etichetta<input id="fLabel"></label>
-    ${hasAddr?`<label>${T==='timeline'?'Indirizzo base OSC':'Indirizzo OSC'}<input id="fAddr" class="mono" spellcheck="false" autocapitalize="off"></label>`:''}
+    ${hasAddr?`<label>${spec.addrLabel||'Indirizzo OSC'}<input id="fAddr" class="mono" spellcheck="false" autocapitalize="off"></label>`:''}
     ${hasAddr&&!gaiaOscAddress?`<label>Canale OSC<select id="fOscChannel"><option value="">Predefinito · ${esc(C.host)}:${C.port}</option>${C.oscChannels.map(c=>`<option value="${esc(c.id)}">${esc(oscChannelName(c))}</option>`).join('')}${missingOscChannel?`<option value="${esc(w.oscChannel)}">Non configurato · ${esc(w.oscChannel)}</option>`:''}</select></label>
       ${missingOscChannel?'<p class="hint">Questo layout riferisce un canale assente su questo browser. Configuralo in Impostazioni o scegli un altro canale.</p>':''}
       <p class="hint">La famiglia e l’istanza identificano la destinazione; indirizzo e argomenti restano quelli definiti dal contratto del progetto TD.</p>`:''}
     ${hasAddr&&gaiaOscAddress?'<p class="hint">Questo indirizzo usa il canale Gaia dedicato (/gaia/), non un canale OSC personalizzato.</p>':''}
-    ${hasRange?`<div class="two"><label>${T==='button'?'Valore OFF':'Min'}<input id="fMin" type="number" step="any"></label><label>${T==='button'?'Valore ON':'Max'}<input id="fMax" type="number" step="any"></label></div>`:''}
-    ${T==='button'?`<label>Comportamento<select id="fMode"><option value="push">Momentaneo</option><option value="toggle">Interruttore</option></select></label>`:''}
-    ${T==='scenes'?`${!['dmx-enum','head-presets'].includes(w.mode)?'<label>Voci (una per riga)<textarea id="fItems"'+(w.mode==='head-select'?' disabled':'')+'></textarea></label>':''}<div class="two"><label>Modalità<select id="fSMode"><option value="push">Una attiva</option><option value="multi">Selezione multipla</option><option value="head-select">Selezione teste TD</option><option value="dmx-enum">Parametro enum DMX V8</option><option value="head-presets">Preset PTZ salvati</option></select></label><label>Colonne<input id="fCols" type="number" min="0" max="12" placeholder="auto"></label></div>
-      ${w.mode==='dmx-enum'?`<label>Device DMX V8<select id="fTdDevice"><option value="">Automatico</option>${devIds('dmx').map(id=>`<option value="${esc(id)}"${id===w.device?' selected':''}>${esc(id)}</option>`).join('')}</select></label>
-        <label>Parametro enum<select id="fTdParam"><option value="">Automatico · palette preferita</option>${[['Palette dei rig',availableEnums.filter(p=>/_palette$/.test(p.n))],['Altri parametri',availableEnums.filter(p=>!/_palette$/.test(p.n))]].filter(([,l])=>l.length).map(([g,l])=>`<optgroup label="${g}">${l.map(p=>`<option value="${esc(p.n)}"${p.n===w.param?' selected':''}>${esc(p.label)} · ${esc(p.n)}</option>`).join('')}</optgroup>`).join('')}</select></label>
-        <p class="hint">Le voci arrivano dalla matrice <code>dmx_matrix</code>; il click invia al device il valore originale dell'enum via MQTT. Nessuna opzione o stato viene inventato.</p>`
-        :w.mode==='head-presets'?'<p class="hint">I preset PTZ si gestiscono dal widget in modalità normale. Sono snapshot locali condivisi nel layout; non sono preset interni al motore TD.</p>'
-        :'<p class="hint">Invia l’indice della voce (0, 1, 2…) oppure, in selezione multipla, un elenco di 0 e 1.</p>'}`:''}
-    ${T==='timeline'?`<div class="two"><label class="chk"><input id="fReadonly" type="checkbox"> Sola lettura: si esegue, le cue si modificano nella pagina Timeline</label><label>Durata (s)<input id="fDur" type="number" min="10"></label><label>BPM<input id="fBpm" type="number" min="40" max="240"></label></div>
-      <label>Cue<textarea id="fCues" spellcheck="false" style="min-height:180px"></textarea></label>
-      <button class="btn" id="fCueEditor">Apri editor cue</button>
-      <label>Device DMX V8 per le cue<select id="fTLDmxDevice"><option value="">Automatico</option>${devIds('dmx').map(id=>`<option value="${esc(id)}"${id===w.dmxDevice?' selected':''}>${esc(id)}</option>`).join('')}</select></label>
-      <p class="hint">Usa l’editor cue per aggiungere, spostare e riordinare le cue locali. Le modifiche si salvano nel layout condiviso OPS; “Aggiorna” in ⋯ → Progetti aggiorna anche lo snapshot nominato. Se DMX Master pubblica un clock attivo, la timeline /show lo segue e invia i comandi al master.</p>`:''}
-    ${T==='clock'?`<label>Modalità<select id="fCMode"><option value="tod">Ora del giorno</option><option value="show">Timecode show (25 fps)</option><option value="countdown">Countdown a orario</option></select></label>
-      <label>Orario di fine<input id="fTarget" type="time"></label>`:''}
-    ${T==='stage'?`<label>Vista<select id="fView"><option value="render">Render</option><option value="plot">Pianta e patch</option></select></label>
-      <h4>Dimensioni reali (m)</h4><div class="two">
-        <label>Larghezza palco<input id="stWidth" type="number" min="2" max="60" step="0.1"></label>
-        <label>Profondità palco<input id="stDepth" type="number" min="2" max="60" step="0.1"></label>
-        <label>Quota piano palco<input id="stFloor" type="number" min="0" max="20" step="0.1"></label>
-        <label>Altezza truss<input id="stTruss" type="number" min="1" max="30" step="0.1"></label></div>
-      <details><summary>Aree: platea e FOH</summary><div class="two">
-        <label>Platea X (centro)<input id="audX" type="number" step="0.1"></label>
-        <label>Platea Y (inizio)<input id="audY" type="number" step="0.1"></label>
-        <label>Platea larghezza<input id="audW" type="number" min="1" step="0.1"></label>
-        <label>Platea profondità<input id="audD" type="number" min="1" step="0.1"></label>
-        <label>FOH X (centro)<input id="fohX" type="number" step="0.1"></label>
-        <label>FOH Y<input id="fohY" type="number" step="0.1"></label>
-        <label>FOH larghezza<input id="fohW" type="number" min="0.5" step="0.1"></label>
-        <label>FOH profondità<input id="fohD" type="number" min="0.5" step="0.1"></label></div></details>
-      <p class="hint">La Pianta si modifica fuori da “Modifica griglia”: trascina una fixture per spostarla, toccala per le proprietà, tocca uno spazio vuoto per aggiungerne una. Geometria e sorgente LED si salvano automaticamente su OPS. “⇪ TD” è un invio separato e riguarda solo le fixture DMX; LED wall, casse e laser restano gestiti da Plancia.</p>`:''}
-    ${GAIA_TYPES.has(T)&&T!=='gaia'?`<label>${T==='gaiadmx'?'Stanza':'Device'}<select id="gDev"><option value="">Automatico</option>${(T==='gaiadmx'?Object.keys(G.dmx).sort():deviceOptions).map(x=>`<option value="${esc(x)}"${x===(T==='gaiadmx'?w.stanza:w.device)?' selected':''}>${esc(x)}</option>`).join('')}</select></label>`:''}
-    ${T==='patchdeck'?`<label>Deck<select id="gDeck"><option value="a">Deck A</option><option value="b">Deck B</option></select></label>`:''}
-    ${T==='tddevice'?`<label>Tipo di device (per la scelta automatica)<select id="gFam"><option value="">Qualsiasi</option><option value="patchdeck">PatchDeck</option><option value="mixeraudio">Controller (mixeraudio)</option><option value="dmx">DMX V8</option></select></label>`:''}
-    ${T==='gaia'?`<label>Stanza della chat<input id="gSt2" class="mono"></label><p class="hint">I messaggi vanno su <code>gaia/voice/command/&lt;stanza&gt;</code> come un comando vocale. I tasti − e + spostano il mood via <code>gaia/touchdesigner/mood</code>: in Admin → Automazioni va acceso "touchdesignerMood".</p>`:''}
-    ${GAIA_TYPES.has(T)&&T!=='gaia'?'<p class="hint">Device e stanze compaiono qui quando pubblicano il loro stato sul broker di Gaia.</p>':''}
+    ${hasRange?`<div class="two"><label>${rangeLabels.min}<input id="fMin" type="number" step="any"></label><label>${rangeLabels.max}<input id="fMax" type="number" step="any"></label></div>`:''}
+    ${ins.html?ins.html(w):''}
     ${hasMidi?`<div class="two"><label>MIDI canale<input id="fCh" type="number" min="1" max="16"></label><label>MIDI CC<input id="fCc" type="number" min="0" max="127" placeholder="off"></label></div>`:''}
     <label>Colore</label><div class="sw">${SWATCH.map(c=>`<button class="swb" data-c="${c}" style="--c:${c}" aria-label="Colore ${c}" aria-pressed="${c===w.color}"></button>`).join('')}</div>
     <div class="row"><button class="btn" id="fDup">Duplica</button><button class="btn danger" id="fDel">Elimina</button></div>
-    ${T==='meter'?'<p class="hint">L\'indicatore riceve soltanto: si muove quando arriva OSC su questo indirizzo.</p>':''}`;
+    ${ins.footer?ins.footer(w):''}`;
   const on=(id,fn,ev='input',rebuild=true)=>{const n=$(id);if(n)n.addEventListener(ev,e=>{fn(e.target.type==='checkbox'?e.target.checked:e.target.value);save();if(rebuild)refresh(w)})};
   const val=(id,v)=>{const n=$(id);if(n){if(n.type==='checkbox')n.checked=!!v;else n.value=v??''}};
   val('#fLabel',w.label); on('#fLabel',v=>w.label=v);
   if(hasAddr){val('#fAddr',w.addr); on('#fAddr',v=>w.addr=v.trim())}
   if($('#fOscChannel')){val('#fOscChannel',w.oscChannel||'');on('#fOscChannel',v=>w.oscChannel=v,'change')}
   if(hasRange){val('#fMin',w.min);val('#fMax',w.max);on('#fMin',v=>{if(v!==''&&!isNaN(v))w.min=+v});on('#fMax',v=>{if(v!==''&&!isNaN(v))w.max=+v})}
-  if(T==='button'){val('#fMode',w.mode);on('#fMode',v=>{w.mode=v;w.value=0},'change')}
-  if(T==='scenes'){val('#fItems',w.items);val('#fSMode',w.mode||'push');val('#fCols',w.cols||'');
-    on('#fItems',v=>w.items=v);$('#fSMode').addEventListener('change',e=>{
-      const old=w.mode;w.mode=e.target.value;w.value=w.mode==='multi'||w.mode==='head-select'?[]:0;
-      if(w.mode==='head-select'){w.addr='/mh/select/heads';w.headValues=[];w.selectedHeads=[];delete w._headsInitialized;syncHeadSelectors()}
-      else if(old==='head-select'&&w.addr==='/mh/select/heads')w.addr='/mh/select';
-      if(w.mode==='dmx-enum'){w.addr='';w.device=w.device||'';w.param=w.param||''}
-      if(w.mode==='head-presets'){w.addr='';w.headPresets=w.headPresets||[]}
-      else if(old==='head-presets'&&!w.addr)w.addr='/mh/preset/recall';
-      save();refresh(w);renderInsp();
-    });on('#fCols',v=>w.cols=+v||0);
-    if($('#fTdDevice'))$('#fTdDevice').addEventListener('change',e=>{w.device=e.target.value;
-      if(w.param&&!enumParams(w.device||pickDev(w,'dmx')).some(p=>p.n===w.param))w.param='';
-      save();refresh(w);renderInsp()});
-    if($('#fTdParam'))$('#fTdParam').addEventListener('change',e=>{w.param=e.target.value;save();refresh(w);renderInsp()});
-  }
-  if(T==='timeline'){val('#fDur',w.duration);val('#fBpm',w.bpm);val('#fCues',w.cues);
-    on('#fDur',v=>{if(+v>=10)w.duration=+v});on('#fBpm',v=>{if(+v>0)w.bpm=+v});on('#fCues',v=>w.cues=v);
-    if($('#fCueEditor'))$('#fCueEditor').onclick=()=>openCueEditor(w);
-    if($('#fReadonly')){$('#fReadonly').checked=!!w.readonly;$('#fReadonly').onchange=e=>{w.readonly=e.target.checked;save();refresh(w)}}
-    if($('#fTLDmxDevice'))$('#fTLDmxDevice').addEventListener('change',e=>{w.dmxDevice=e.target.value;save();renderInsp()})}
-  if(T==='clock'){val('#fCMode',w.mode);val('#fTarget',w.target||'23:30');on('#fCMode',v=>w.mode=v,'change');on('#fTarget',v=>w.target=v)}
-  if(T==='stage'){
-    val('#fView',w.view);on('#fView',v=>w.view=v,'change');
-    const st=L.stage;
-    const stageFields=[
-      ['#stWidth',st,'width',2,60],['#stDepth',st,'depth',2,60],['#stFloor',st,'floorHeight',0,20],['#stTruss',st,'trussHeight',1,30],
-      ['#audX',st.audience,'x',-100,100],['#audY',st.audience,'y',-100,200],['#audW',st.audience,'width',1,200],['#audD',st.audience,'depth',1,200],
-      ['#fohX',st.foh,'x',-100,100],['#fohY',st.foh,'y',-100,200],['#fohW',st.foh,'width',.5,50],['#fohD',st.foh,'depth',.5,50]];
-    for(const [selector,target,key,min,max] of stageFields){
-      val(selector,target[key]);
-      $(selector).addEventListener('change',e=>{
-        const n=Number(e.target.value);
-        if(!Number.isFinite(n)){e.target.value=target[key];return}
-        target[key]=clamp(n,min,max);e.target.value=target[key];save();
-      });
-    }
-  }
-  if($('#gDev')){val('#gDev',T==='gaiadmx'?(w.stanza||''):(w.device||''));
-    if(T==='tddevice')$('#gDev').addEventListener('change',e=>{w.device=e.target.value;save();refresh(w)});
-    else on('#gDev',v=>{if(T==='gaiadmx')w.stanza=v;else w.device=v},'change')}
-  if(T==='patchdeck'){val('#gDeck',w.deck||'a');on('#gDeck',v=>w.deck=v,'change')}
-  if(T==='tddevice'){val('#gFam',w.fam||'');$('#gFam').addEventListener('change',e=>{
-    w.fam=e.target.value;if(w.device&&!devIds(w.fam).includes(w.device))w.device='';
-    save();refresh(w);renderInsp();
-  })}
-  if(T==='gaia'){val('#gSt2',GC.stanza);on('#gSt2',v=>{GC.stanza=v.trim()||'studio';store.set(GKEY,GC)},'change',false)}
+  ins.bind?.(w,{on,val});
   if(hasMidi){val('#fCh',w.midi.ch);val('#fCc',w.midi.cc);on('#fCh',v=>w.midi.ch=clamp(+v||1,1,16));on('#fCc',v=>w.midi.cc=v===''?'':clamp(Math.round(+v),0,127))}
   insp.querySelectorAll('.swb').forEach(b=>b.onclick=()=>{w.color=b.dataset.c;save();refresh(w);insp.querySelectorAll('.swb').forEach(x=>x.setAttribute('aria-pressed',x===b))});
   $('#fDup').onclick=()=>{const c=JSON.parse(JSON.stringify(w));c.id=uid();[c.x,c.y]=freeSpot(c.w,c.h);page().widgets.push(c);save();stage.appendChild(build(c));select(c.id)};

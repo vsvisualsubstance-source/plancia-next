@@ -3,7 +3,18 @@
 // Il motore che fa avanzare il tempo e manda le cue resta nel loop (80) e in
 // 30-show-engine.js; qui c'e' solo il widget. La timeline dello show ha le tracce
 // VIDEO (66-video-timeline.js) e LASER (99-laser-scenes.js).
-registerWidget('timeline',{size:[10,3],label:'Timeline',showsValue:false,
+registerWidget('timeline',{addrLabel:'Indirizzo base OSC',
+  inspector:{html:w=>`<div class="two"><label class="chk"><input id="fReadonly" type="checkbox"> Sola lettura: si esegue, le cue si modificano nella pagina Timeline</label><label>Durata (s)<input id="fDur" type="number" min="10"></label><label>BPM<input id="fBpm" type="number" min="40" max="240"></label></div>
+      <label>Cue<textarea id="fCues" spellcheck="false" style="min-height:180px"></textarea></label>
+      <button class="btn" id="fCueEditor">Apri editor cue</button>
+      <label>Device DMX V8 per le cue<select id="fTLDmxDevice"><option value="">Automatico</option>${devIds('dmx').map(id=>`<option value="${esc(id)}"${id===w.dmxDevice?' selected':''}>${esc(id)}</option>`).join('')}</select></label>
+      <p class="hint">Usa l’editor cue per aggiungere, spostare e riordinare le cue locali. Le modifiche si salvano nel layout condiviso OPS; “Aggiorna” in ⋯ → Progetti aggiorna anche lo snapshot nominato. Se DMX Master pubblica un clock attivo, la timeline /show lo segue e invia i comandi al master.</p>`,
+    bind:(w,{on,val})=>{val('#fDur',w.duration);val('#fBpm',w.bpm);val('#fCues',w.cues);
+    on('#fDur',v=>{if(+v>=10)w.duration=+v});on('#fBpm',v=>{if(+v>0)w.bpm=+v});on('#fCues',v=>w.cues=v);
+    if($('#fCueEditor'))$('#fCueEditor').onclick=()=>openCueEditor(w);
+    if($('#fReadonly')){$('#fReadonly').checked=!!w.readonly;$('#fReadonly').onchange=e=>{w.readonly=e.target.checked;save();refresh(w)}}
+    if($('#fTLDmxDevice'))$('#fTLDmxDevice').addEventListener('change',e=>{w.dmxDevice=e.target.value;save();renderInsp()})}},
+  size:[10,3],label:'Timeline',showsValue:false,
   inner(w){const cues=timelineCues(w),D=timelineDuration(w),controlled=isShowTimeline(w)&&showClock.authority;
       const sample=controlled?showClockSample():null,available=!!sample&&showClockFresh(sample),locked=controlled&&!available;
       const step=[5,10,15,30,60,120,300].find(s=>D/s<=12)||600; let ticks='';
