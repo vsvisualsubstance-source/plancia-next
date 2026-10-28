@@ -98,6 +98,7 @@ async function main() {
     await p.reload();
     const layoutAfter = summarizeLayout(await p.ev('window.__planciaTest.L'));
     snap.layout = { idempotentOnReload: layoutBefore === layoutAfter, pages: JSON.parse(layoutAfter).pages.length };
+    snap.inspector = await inspectorSnapshot(p);
     if (p.problems.length) throw new Error('errori nella pagina:\n  ' + p.problems.join('\n  '));
   } finally {
     p.close();
@@ -121,9 +122,34 @@ async function main() {
   assert.ok(snap.layout.idempotentOnReload, 'il layout cambia da solo a ogni ricaricamento');
 }
 
+// ispettore di "Modifica griglia": per il primo widget di ogni tipo (e di ogni
+// modo di scenes) l'HTML e i valori dei campi, entrando davvero in modifica e
+// toccando il widget con un mouse vero
+async function inspectorSnapshot(p) {
+  await p.ev(`document.querySelector('#editBtn').click();1`);
+  await sleep(500);
+  const targets = await p.ev(`(()=>{const seen=new Set(),out=[];window.__planciaTest.L.pages.forEach((pg,pi)=>pg.widgets.forEach(w=>{
+    const k=w.type==='scenes'?'scenes:'+(w.mode||'push'):w.type;if(seen.has(k))return;seen.add(k);out.push({k,pi,id:w.id})}));return out})()`);
+  const out = {};
+  for (const t of targets) {
+    await p.ev(`document.querySelectorAll('#tabs > *')[${t.pi}].click();1`);
+    await sleep(400);
+    const c = await p.ev(`(()=>{const el=document.querySelector('[data-id="${t.id}"]'),r=el.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})()`);
+    await p.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: c.x, y: c.y, button: 'left', clickCount: 1 });
+    await p.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: c.x, y: c.y, button: 'left', clickCount: 1 });
+    await sleep(300);
+    out[t.k] = await p.ev(`(()=>{const i=document.querySelector('#insp');
+      return{html:i.innerHTML.replace(/\\s+/g,' ').trim(),
+        fields:Object.fromEntries([...i.querySelectorAll('[id]')].filter(n=>'value' in n).map(n=>[n.id,n.type==='checkbox'?n.checked:n.value]))}})()`);
+  }
+  await p.ev(`document.querySelector('#editBtn').click();1`);
+  return out;
+}
+
 function summary(s) {
   console.log(`  widget: ${Object.keys(s.widgets).length} tipi · messaggi: ${s.messages.length} · template: ${Object.keys(s.templates).length}` +
-    ` · migrazioni: uiRev ${s.migrations.uiRev}, ${s.migrations.pages.length} pagine · layout idempotente: ${s.layout.idempotentOnReload}`);
+    ` · migrazioni: uiRev ${s.migrations.uiRev}, ${s.migrations.pages.length} pagine · layout idempotente: ${s.layout.idempotentOnReload}` +
+    ` · ispettore: ${Object.keys(s.inspector || {}).length} tipi`);
 }
 
 main().catch(e => { console.error('caratterizzazione fallita:', e.message); process.exitCode = 2; });
