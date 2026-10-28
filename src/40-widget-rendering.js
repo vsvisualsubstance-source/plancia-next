@@ -13,13 +13,9 @@ function place(el,w){
   }
   el.classList.toggle('hz',w.w>w.h);
 }
-function inner(w){
-  const t=widgetType(w.type);if(t?.inner)return t.inner(w);
-  switch(w.type){
-    default: return gInner(w);
-  }
-}
-const showVal=w=>{const t=widgetType(w.type);if(t)return typeof t.showsValue==='function'?t.showsValue(w):t.showsValue;return true};
+// tutto per tipo dal registro (05-widget-registry.js); un tipo sconosciuto resta vuoto
+function inner(w){return widgetType(w.type)?.inner?.(w)??''}
+const showVal=w=>{const t=widgetType(w.type);return!t||(typeof t.showsValue==='function'?t.showsValue(w):t.showsValue)};
 function build(w){
   const el=document.createElement('div');
   el.className='w t-'+w.type+(selId===w.id?' sel':''); el.dataset.id=w.id;
@@ -33,9 +29,8 @@ function build(w){
 function paint(el,w){
   if(!el) return;
   const val=el.querySelector('.val'),t=widgetType(w.type);
-  if(t){t.paint?.(el,w);if(val)val.textContent=t.valueText?t.valueText(w):fmt(out(w,w.value));return}
-  const v=w.value;
-  if(val) val.textContent=fmt(out(w,v));
+  t?.paint?.(el,w);
+  if(val)val.textContent=t?.valueText?t.valueText(w):fmt(out(w,w.value));
 }
 const elOf=id=>stage.querySelector(`[data-id="${id}"]`);
 function renderStage(){
@@ -65,12 +60,7 @@ function render(){document.body.classList.toggle('editing',editing);$('#addbar')
 
 /* ---------- invio OSC ---------- */
 // argomenti OSC: quelli dichiarati dal tipo (registro), altrimenti il valore nel suo range
-function argsOf(w){
-  const t=widgetType(w.type);if(t?.args)return t.args(w);
-  switch(w.type){
-    default: return [out(w,w.value)];
-  }
-}
+function argsOf(w){const t=widgetType(w.type);return t?.args?t.args(w):[out(w,w.value)]}
 const queue=new Map(); let raf=0;
 function send(w){if(!w.addr)return; queue.set(w.id,w); if(!raf) raf=requestAnimationFrame(flush)}
 function flush(){raf=0; for(const w of queue.values()){

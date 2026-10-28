@@ -16,13 +16,7 @@ const HELP_PAGES={
   PatchDeck:'PatchDeck: i due deck video, effetti e controller.',
   Mix:'Mixer audio: fader, effetti e pad.',
 };
-function helpForWidget(w){
-  const t=widgetType(w.type);if(t?.help)return t.help(w);
-  const a=w.addr||'';
-  switch(w.type){
-    default:return[w.label||NAMES[w.type]||w.type,`Indirizzo ${a||'—'}.`];
-  }
-}
+function helpForWidget(w){const t=widgetType(w.type);return t?.help?t.help(w):[w.label||NAMES[w.type]||w.type,`Indirizzo ${w.addr||'—'}.`]}
 const HELP_BAR=[
   ['#projBtn','Progetto','Il nome del progetto aperto. Il pallino arancione = modifiche non ancora salvate nel progetto (il layout resta comunque autosalvato su OPS). Tocca per salvare, aprire, duplicare, esportare.'],
   ['#gconn','Gaia','Collegamento a Gaia (MQTT): verde = DMX Master e gli altri servizi rispondono.'],

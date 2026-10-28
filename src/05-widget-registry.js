@@ -1,8 +1,8 @@
 /* ---------- registro dei tipi di widget ---------- */
 // Ogni tipo dichiara in un posto solo quello che prima era sparso negli switch
-// di 00 (DEF, NAMES), 40 (interno, valore, indirizzo), 41 (tocco), 80 (loop) e
-// 95 (aiuto). I tipi non ancora registrati passano ancora dagli switch: il
-// refactor procede un tipo alla volta (REFACTOR.md, passo 2).
+// di 00 (DEF, NAMES), 40 (interno, valore, indirizzo, argomenti OSC), 41 (tocco),
+// 80 (loop) e 95 (aiuto). Oggi tutti i 19 tipi sono registrati e quegli switch
+// non esistono piu' (REFACTOR.md, passo 2).
 //
 //   registerWidget('laser',{
 //     size:[8,6], label:'Laser',            // dimensioni di default e nome nel menu

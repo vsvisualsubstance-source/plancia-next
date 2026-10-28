@@ -34,7 +34,7 @@ function loop(){
   simTick(n);const gp=G.dirty||n-G.lastPaint>1000;if(gp){G.dirty=false;G.lastPaint=n}
   const byId=new Map(page().widgets.map(w=>[w.id,w]));
   for(const el of stage.children){const w=byId.get(el.dataset.id);if(!w)continue;
-    const t=widgetType(w.type);if(t){t.tick?.(el,w,{repaint:gp,now:n,level});continue}
+    widgetType(w.type)?.tick?.(el,w,{repaint:gp,now:n,level});
   }
   requestAnimationFrame(loop);
 }
