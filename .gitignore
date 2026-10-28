@@ -4,3 +4,4 @@ backup/
 data/
 *.bak-*
 app.js
+test-output/

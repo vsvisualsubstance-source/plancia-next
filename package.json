@@ -7,7 +7,8 @@
     "build": "node build-app.js",
     "start": "node build-app.js && node bridge.js",
     "test": "node --test",
-    "dev": "run_dev.bat"
+    "dev": "run_dev.bat",
+    "smoke": "node test/ui-smoke.js"
   },
   "dependencies": {
     "mqtt": "^5.16.1",

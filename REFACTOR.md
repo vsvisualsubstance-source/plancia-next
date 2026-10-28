@@ -53,8 +53,11 @@ Problemi concreti visti lavorandoci:
 ## Passi
 
 0. **Rete di sicurezza** (prima di toccare l'architettura)
-   - smoke test UI nel repo: browser headless, ogni pagina aperta, zero
-     eccezioni, screenshot per confronto;
+   - FATTO: `npm run smoke` (`test/ui-smoke.js`): bridge di prova su porta
+     libera con copia dei dati, browser headless in simulazione, ogni pagina
+     aperta, eccezioni ed errori di console raccolti, uno screenshot per
+     pagina in `test-output/smoke/` (+ `report.json`). Prima del refactor:
+     13 pagine, 0 problemi. Verificato che intercetta un errore inserito;
    - test di caratterizzazione: layout JSON andata/ritorno, `argsOf` per
      ogni tipo di widget, catena `uiRev`, messaggi OSC/MIDI generati.
 1. **Avvio esplicito**: `init()` chiamato in fondo al bundle; nessun
