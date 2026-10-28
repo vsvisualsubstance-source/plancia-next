@@ -12,7 +12,8 @@
 //     paint:(el,w)=>…, valueText:w=>testo,  // disegno del valore e testo sotto l'etichetta
 //     args:w=>[…],                          // argomenti OSC (default: il valore nel range min..max)
 //     onPointer:(e,el,w)=>…,                // tocco fuori da "Modifica griglia"
-//     tick:(el,w,{repaint,now})=>…,         // a ogni fotogramma; repaint = dati cambiati o 1 s
+//     tick:(el,w,{repaint,now,level})=>…,   // a ogni fotogramma; repaint = dati cambiati o 1 s,
+//                                           // level = pulsazione dello show (per il Render)
 //     help:w=>[titolo,testo]});             // passo della visita guidata "?"
 //
 // La registrazione avviene quando il modulo del widget viene valutato: tutto

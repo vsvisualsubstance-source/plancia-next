@@ -106,7 +106,12 @@ Problemi concreti visti lavorandoci:
      costruzione (canvas e classe `narrow` del widget gaia). `GAIA_TYPES` e'
      uscito dai punti di smistamento: resta solo nell'ispettore e nel
      ridimensionamento in modifica griglia. 16 tipi verificati nel browser.
-   - Restano negli switch: `scenes` (molti modi), `timeline`, `stage`.
+   - `stage` (Palco): FATTO, registrato in fondo a `61-stage-fixtures.js`
+     (barra strumenti, Pianta, Render a tempo con `level`, riga di stato);
+     il contesto di `tick` ha in piu' `level` (pulsazione dello show);
+     `stageRenderVisible()` per le anteprime video. 17 tipi verificati,
+     con tocco "Pianta" che cambia vista.
+   - Restano negli switch: `scenes` (molti modi) e `timeline`.
    - Prossima fase del registro: l'ispettore di "Modifica griglia"
      (`renderInsp` in 41) ha ancora campi per tipo (range, modo del
      pulsante, modalita' dell'orologio, nota dell'indicatore): diventera'

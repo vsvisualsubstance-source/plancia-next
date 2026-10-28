@@ -3,7 +3,7 @@ const tc=s=>{const f=Math.floor((s%1)*25),S=Math.floor(s);return[Math.floor(S/36
 let lastT=now();
 function loop(){
   const n=now(),dt=(n-lastT)/1000;lastT=n;
-  const previewVisible=page().widgets.some(w=>w.type==='stage'&&w.view!=='plot');
+  const previewVisible=stageRenderVisible();
   syncWallVideoPlayers(previewVisible?(L.fixtures||[]):[]);
   [SH.wash,SH.back,SH.bar,SH.wall].forEach(T=>stepT(T,n));SH.heads.forEach(h=>stepT(h.T,n));
   // timeline
@@ -34,12 +34,8 @@ function loop(){
   simTick(n);const gp=G.dirty||n-G.lastPaint>1000;if(gp){G.dirty=false;G.lastPaint=n}
   const byId=new Map(page().widgets.map(w=>[w.id,w]));
   for(const el of stage.children){const w=byId.get(el.dataset.id);if(!w)continue;
-    const t=widgetType(w.type);if(t){t.tick?.(el,w,{repaint:gp,now:n});continue}
-    if(w.type==='stage'){const c=el.querySelector('canvas'),g=c.getContext('2d');if(!c._d)continue;g.setTransform(c._d,0,0,c._d,0,0);
-      const W=c.width/c._d,H=c.height/c._d;if(w.view==='plot')drawPlot(g,W,H,n,w);else drawRender(g,W,H,n,level);
-      const hud=w.view==='plot'?'':`${SH.blackout?'<b>BLACKOUT</b> · ':''}SC ${SH.scene+1} ${esc((tdScenes().length?tdScenes().find(s=>s.index===SH.scene)?.label:dmxOutputFresh()?'':LOOKS[SH.scene]?.n)||'')} · fade ${SH.fade.toFixed(1)}s · chase ${CHASE[SH.chase]||'Off'}${SH.strobe?' · <b>STROBO</b>':''} · ${esc(dmxOutputSummary())}`;
-      const h=el.querySelector('.hud');if(h._v!==hud){h.innerHTML=hud;h._v=hud}}
-    else if(w.type==='timeline'){
+    const t=widgetType(w.type);if(t){t.tick?.(el,w,{repaint:gp,now:n,level});continue}
+    if(w.type==='timeline'){
       const lb=el.querySelector('.tl-live');if(lb){const on=tdShowActive(),t=on===null?'—':on?'TIMELINE':'LIVE';
         if(lb.textContent!==t){lb.textContent=t;lb.classList.toggle('is-live',on===false);lb.classList.toggle('is-tl',on===true)}}
       const r=rt(w),D=timelineDuration(w),cues=timelineCues(w);

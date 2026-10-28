@@ -4,23 +4,6 @@ function bind(el,w){
     if(editing) return editDown(e,el,w);
     const t=widgetType(w.type);if(t?.onPointer)return t.onPointer(e,el,w);
     const end=()=>{el.classList.remove('active','press');el.onpointermove=null;el.onpointerup=el.onpointercancel=null;save()};
-    if(w.type==='stage'){const b=e.target.closest('[data-v]');if(b){w.view=b.dataset.v;el.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));save()}
-      else if(e.target.closest('[data-act="syncall"]'))syncAllFixtures();
-      else if(e.target.closest('[data-act="importtd"]'))importFromTD();
-      else if(e.target.closest('[data-act="resolve"]'))resolveDuplicates();
-      else if(e.target.closest('[data-act="types"]'))syncTypesToTD();
-      else if(e.target.closest('[data-act="groups"]'))openGroupEditor();
-      else if(e.target.closest('[data-act="scenes"]'))openSceneEditor();
-      else if(e.target.closest('[data-act="models"]'))openModelEditor();
-      else if(e.target.closest('[data-act="lamps"]'))openLampPanel();
-      else if(e.target.closest('[data-act="space"]'))openSpaceEditor();
-      else if(e.target.closest('[data-act="stage-ai"]'))openStageAI();
-      else if(w.view==='plot')stageDown(e,el,w);
-      else if(e.target.closest('canvas'))(L.fixtures||[]).forEach(f=>{
-        const state=wallVideoPlayers.get(f.id);
-        if(f.type==='wall'&&state&&['blocked','error'].includes(state.status))retryWallVideo(f);
-      });
-      return}
     if(w.type==='timeline'){
       const b=e.target.closest('[data-act]'); if(b){e.preventDefault();if(b.dataset.act==='edit-cues')openCueEditor(w);else tlAct(w,b.dataset.act);return}
       const lane=e.target.closest('.tl-lane'); if(!lane)return;

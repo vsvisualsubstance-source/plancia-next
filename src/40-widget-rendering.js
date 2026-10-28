@@ -39,21 +39,19 @@ function inner(w){
         <div class="tl-tr"><button data-act="start" aria-label="Inizio"${locked?' disabled':''}>${ICON.start}</button><button data-act="play" aria-label="Play/pausa"${locked?' disabled':''}>${ICON.play}</button><button data-act="stop" aria-label="Stop"${locked?' disabled':''}>${ICON.stop}</button><button data-act="loop" aria-label="Loop"${controlled?' disabled':''}>${ICON.loop}</button>${w.readonly?'':'<button data-act="edit-cues" aria-label="Modifica cue">CUE</button>'}</div>
         ${isShowTimeline(w)?`<button class="tl-live" data-act="live"${w.readonly?' disabled':''} title="${w.readonly?'Modalità di DMX Master: si cambia nella pagina Timeline':'LIVE: comandi tu dal tablet (per comporre e catturare le scene). TIMELINE: comanda la timeline dello show'}">—</button>`:''}<span class="tl-tc">00:00:00:00</span><span class="tl-cue"><span class="k">CUE</span><b>—</b></span><span class="tl-next"></span><span class="tl-bpm">${controlled?`TD · ${available?sample.source.toUpperCase():'OFFLINE · FERMO'}`:`${isShowTimeline(w)?'SIMULAZIONE · ':''}${w.bpm||120} BPM`} · ${Math.floor(D/60)}:${String(Math.round(D%60)).padStart(2,'0')}</span></div>
         ${isShowTimeline(w)?'<div class="tl-trk tl-trk-main"><div class="tl-vhead"><span class="k">LUCI</span></div>':''}<div class="tl-lane"><div class="tl-ruler">${ticks}</div><div class="tl-cues">${blocks}</div><div class="tl-ph"></div></div>${isShowTimeline(w)?'</div>'+videoLaneHtml(w,D)+laserLaneHtml(w,D):''}</div>`}
-    case 'stage': return `<canvas></canvas><div class="seg"><button data-v="render" aria-pressed="${w.view!=='plot'}">Render</button><button data-v="plot" aria-pressed="${w.view==='plot'}">Pianta</button><button data-act="syncall" title="Invia a DMX Master solo le fixture patchabili DMX. È un invio separato dall'autosalvataggio del layout; LED wall escluse.">⇪ TD</button><button data-act="importtd" title="Importa da DMX Master la patch delle sole fixture DMX; le fixture non-DMX restano in Plancia.">⇩ TD</button><button data-act="resolve" title="Pulisce i doppioni DMX in TD e reimporta la patch; le fixture non-DMX restano in Plancia.">🧹 TD</button><button data-act="scenes" title="Scene di DMX Master: cattura dal vivo con categorie, richiama, ricattura, rinomina, elimina">▣ Scene</button><button data-act="stage-ai" title="Palco da descrizione: lo descrivi a parole, Ollama prepara le fixture nella Pianta">✨ AI</button><button data-act="space" title="Misure di palco, platea, regia e sala: ingombro totale dello show">📐 Spazio</button><button data-act="lamps" title="Lampade a scarica delle teste (iSpot...): accendi e spegni da DMX Master">💡 Lampade</button><button data-act="models" title="Modelli di fixture di DMX Master: canali, colore lampada, ruota colori e gobo delle teste">▤ Modelli</button><button data-act="groups" title="Gruppi DMX (rig di DMX Master): front, back, teste, LED bar, haze, blinder e rig nuovi">▦ Gruppi</button><button data-act="types" title="Invia la tassonomia dei tipi di Plancia a DMX Master (sostituisce quella attuale).">📋 TD</button></div><div class="hud"></div>`;
     default: return gInner(w);
   }
 }
-const noVal=new Set(['scenes','timeline','stage']);
+const noVal=new Set(['scenes','timeline']);
 const showVal=w=>{const t=widgetType(w.type);if(t)return typeof t.showsValue==='function'?t.showsValue(w):t.showsValue;return!noVal.has(w.type)};
 function build(w){
   const el=document.createElement('div');
   el.className='w t-'+w.type+(selId===w.id?' sel':''); el.dataset.id=w.id;
   el.style.setProperty('--c',w.color);
-  const t=widgetType(w.type),addr=(t?!t.showsAddr:w.type==='stage')||(w.type==='scenes'&&w.mode==='dmx-enum')?'':(w.addr||'nessun indirizzo');
+  const t=widgetType(w.type),addr=(t&&!t.showsAddr)||(w.type==='scenes'&&w.mode==='dmx-enum')?'':(w.addr||'nessun indirizzo');
   el.innerHTML=`<div class="box">${inner(w)}<span class="lab">${esc(w.label)}</span><span class="addr">${esc(addr)}</span>${showVal(w)?'<span class="val"></span>':''}</div><span class="rs"></span>`;
   place(el,w); paint(el,w); bind(el,w);
   if(t?.mounted)t.mounted(el,w);
-  else if(w.type==='stage')sizeCanvas(el);
   return el;
 }
 function paint(el,w){
