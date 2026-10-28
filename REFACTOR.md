@@ -111,7 +111,11 @@ Problemi concreti visti lavorandoci:
      il contesto di `tick` ha in piu' `level` (pulsazione dello show);
      `stageRenderVisible()` per le anteprime video. 17 tipi verificati,
      con tocco "Pianta" che cambia vista.
-   - Restano negli switch: `scenes` (molti modi) e `timeline`.
+   - `timeline`: FATTA, modulo proprio `43-timeline-widget.js` (contenuto con
+     le tracce, tocco su trasporto/cue/traccia, aggiornamento a ogni
+     fotogramma). Il MOTORE che fa avanzare il tempo e manda le cue resta nel
+     loop (80) e in 30-show-engine.js: e' il passo 4. 18 tipi verificati.
+   - Resta negli switch solo `scenes` (sei modi).
    - Prossima fase del registro: l'ispettore di "Modifica griglia"
      (`renderInsp` in 41) ha ancora campi per tipo (range, modo del
      pulsante, modalita' dell'orologio, nota dell'indicatore): diventera'

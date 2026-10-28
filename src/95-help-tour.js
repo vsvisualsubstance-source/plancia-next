@@ -20,7 +20,6 @@ function helpForWidget(w){
   const t=widgetType(w.type);if(t?.help)return t.help(w);
   const a=w.addr||'';
   switch(w.type){
-    case 'timeline':return['Timeline dello show',w.readonly?'Segue l\'orologio dello show di DMX Master. LIVE/TIMELINE dice chi comanda le luci: in TIMELINE vanno da sole con le cue, in LIVE comandi tu.':'Le cue dello show: tocca un blocco per modificarlo, "Cue" per l\'editor (scena e fade di ogni cue). Play/stop/inizio comandano l\'orologio. Sotto, la corsia VIDEO per PatchDeck.'];
     case 'scenes':
       if(w.mode==='dmx-enum')return['Palette del rig','Il colore di tutto il gruppo (rig). Per una luce sola usa la pagina Luci.'];
       if(w.mode==='head-select')return['Selezione teste','Scegli quali teste comandare con i controlli della pagina.'];

@@ -13,6 +13,7 @@ const appModules = [
   '40-widget-rendering.js',
   '41-widget-interactions.js',
   '42-control-widgets.js',
+  '43-timeline-widget.js',
   '49-dmx-output.js',
   '50-bridge-sync.js',
   '60-stage-rendering.js',

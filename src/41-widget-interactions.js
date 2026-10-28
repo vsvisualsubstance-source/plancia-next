@@ -3,36 +3,6 @@ function bind(el,w){
   el.addEventListener('pointerdown',e=>{
     if(editing) return editDown(e,el,w);
     const t=widgetType(w.type);if(t?.onPointer)return t.onPointer(e,el,w);
-    const end=()=>{el.classList.remove('active','press');el.onpointermove=null;el.onpointerup=el.onpointercancel=null;save()};
-    if(w.type==='timeline'){
-      const b=e.target.closest('[data-act]'); if(b){e.preventDefault();if(b.dataset.act==='edit-cues')openCueEditor(w);else tlAct(w,b.dataset.act);return}
-      const lane=e.target.closest('.tl-lane'); if(!lane)return;
-      const block=e.target.closest('.tl-blk');
-      if(block){
-        if(isShowTimeline(w)&&showClock.authority){
-          e.preventDefault();
-          const cue=timelineCues(w)[+block.dataset.k];
-          if(cue)showClockCommand(w,'cue',cue.index||(+block.dataset.k+1));
-          return;
-        }
-        // sola lettura (pagina Show): il blocco salta alla cue, non si sposta
-        if(w.readonly){e.preventDefault();const cue=parseCues(w)[+block.dataset.k];if(cue)seek(w,cue.t);return}
-        e.preventDefault();el.setPointerCapture(e.pointerId);
-        const cues=parseCues(w).map(c=>({t:c.t,name:c.name,targets:cueTargets(c)})),i=+block.dataset.k,r=lane.getBoundingClientRect(),startX=e.clientX,startT=cues[i]?.t??0;
-        block.classList.add('dragging');
-        const move=ev=>{const t=clamp(startT+(ev.clientX-startX)/r.width*w.duration,0,Math.max(0,w.duration-.01));block.style.left=t/w.duration*100+'%'};
-        el.onpointermove=move;
-        el.onpointerup=el.onpointercancel=ev=>{
-          const delta=Math.abs(ev.clientX-startX);el.onpointermove=el.onpointerup=el.onpointercancel=null;
-          if(delta<5){openCueEditor(w);return}
-          cues[i].t=clamp(startT+(ev.clientX-startX)/r.width*w.duration,0,Math.max(0,w.duration-.01));
-          w.cues=serializeCues(cues);save();refresh(w);
-        };
-        return;
-      }
-      e.preventDefault(); el.setPointerCapture(e.pointerId); const r=lane.getBoundingClientRect();
-      const mv=ev=>seek(w,clamp((ev.clientX-r.left)/r.width)*timelineDuration(w)); mv(e); el.onpointermove=mv; el.onpointerup=el.onpointercancel=end; return;
-    }
     if(w.type==='scenes'){
       if(e.target.closest('[data-act="manage-scenes"]')){e.preventDefault();openSceneEditor();return}
       if(w.mode==='head-presets'){

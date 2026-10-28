@@ -29,7 +29,7 @@ test('app bundle preserves module order and parses as one client scope', () => {
 
   assert.equal(bundle.startsWith('(()=>{\n'), true);
   assert.equal(bundle.endsWith('\n})();\n'), true);
-  assert.equal(appModules.length, 36);
+  assert.equal(appModules.length, 37);
   assert.equal(positions.every(position => position >= 0), true);
   assert.deepEqual(positions, [...positions].sort((a, b) => a - b));
   assert.doesNotThrow(() => new vm.Script(bundle));
@@ -66,7 +66,7 @@ test('registered widget types live only in their module, not in the old dispatch
   const dir = path.join(__dirname, '..', 'src');
   const all = appModules.map(f => fs.readFileSync(path.join(dir, f), 'utf8')).join('\n');
   const registered = [...all.matchAll(/registerWidget\('([^']+)'/g)].map(m => m[1]);
-  for (const t of ['laser', 'fixgrid', 'cuestack', 'audiorigs', 'fader', 'knob', 'xy', 'button', 'meter', 'color', 'label', 'clock', 'gaia', 'patchdeck', 'tddevice', 'gaiadmx', 'stage']) assert.ok(registered.includes(t), t);
+  for (const t of ['laser', 'fixgrid', 'cuestack', 'audiorigs', 'fader', 'knob', 'xy', 'button', 'meter', 'color', 'label', 'clock', 'gaia', 'patchdeck', 'tddevice', 'gaiadmx', 'stage', 'timeline']) assert.ok(registered.includes(t), t);
   const dispatch = ['00-core-state.js', '40-widget-rendering.js', '41-widget-interactions.js', '80-animation-loop.js', '95-help-tour.js'];
   // l'ispettore di "Modifica griglia" (renderInsp in 41) e' la prossima fase: si controlla solo bind()
   const only41 = s => s.slice(s.indexOf('function bind('), s.indexOf('function editDown('));

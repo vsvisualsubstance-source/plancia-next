@@ -35,27 +35,7 @@ function loop(){
   const byId=new Map(page().widgets.map(w=>[w.id,w]));
   for(const el of stage.children){const w=byId.get(el.dataset.id);if(!w)continue;
     const t=widgetType(w.type);if(t){t.tick?.(el,w,{repaint:gp,now:n,level});continue}
-    if(w.type==='timeline'){
-      const lb=el.querySelector('.tl-live');if(lb){const on=tdShowActive(),t=on===null?'—':on?'TIMELINE':'LIVE';
-        if(lb.textContent!==t){lb.textContent=t;lb.classList.toggle('is-live',on===false);lb.classList.toggle('is-tl',on===true)}}
-      const r=rt(w),D=timelineDuration(w),cues=timelineCues(w);
-      el.querySelector('.tl-ph').style.left=r.t/D*100+'%';paintVideoLane(el,w,D,r.t);paintLaserLane(el,w,D,r.t);el.querySelector('.tl-tc').textContent=tc(r.t);
-      const sample=isShowTimeline(w)&&showClock.authority?showClockSample():null;
-      const controlled=isShowTimeline(w)&&showClock.authority,locked=controlled&&(!sample||!showClockFresh(sample));
-      el.querySelector('[data-act="start"]').disabled=locked;
-      el.querySelector('[data-act="play"]').disabled=locked;
-      el.querySelector('[data-act="stop"]').disabled=locked;
-      el.querySelector('[data-act="loop"]').disabled=controlled;
-      const remoteLabel=sample?.source==='mqtt'&&sample.state.cue?.label?
-        `${sample.state.cue.index?`${sample.state.cue.index} · `:''}${sample.state.cue.label}`:null;
-      const b=el.querySelector('.tl-cue b'),nm=remoteLabel|| (cues[r.cue]?`${r.cue+1} · ${cues[r.cue].name}`:'—');if(b.textContent!==nm)b.textContent=nm;
-      const pb=el.querySelector('[data-act="play"]');if(pb._p!==r.playing){pb._p=r.playing;pb.innerHTML=r.playing?ICON.pause:ICON.play;pb.classList.toggle('on',r.playing)}
-      el.querySelector('[data-act="loop"]').classList.toggle('on',r.loop);
-      el.querySelectorAll('.tl-blk[data-k]').forEach(x=>{const k=+x.dataset.k;x.classList.toggle('cur',k===r.cue);x.classList.toggle('done',k<r.cue)});
-      // prossima cue e tempo che manca: l'operatore sa cosa sta per succedere
-      const nx=el.querySelector('.tl-next'),nc=cues[r.cue+1],nt=nc?`PROSSIMA ${r.cue+2} · ${nc.name} · tra ${Math.floor(Math.max(0,nc.t-r.t)/60)}:${String(Math.floor(Math.max(0,nc.t-r.t))%60).padStart(2,'0')}`:'';
-      if(nx&&nx.textContent!==nt){nx.textContent=nt;nx.classList.toggle('soon',!!nc&&nc.t-r.t<=10)}}
-    else if(w.type==='scenes'&&w.mode==='dmx-enum'){if(gp)paintTdEnum(el,w)}
+    if(w.type==='scenes'&&w.mode==='dmx-enum'){if(gp)paintTdEnum(el,w)}
     else if(w.type==='scenes'&&w.addr==='/dmx/scene'){const k=SH.fade>0?clamp((n-SH.t0)/(SH.fade*1000)):1;
       el.querySelectorAll('.si').forEach((x,i)=>{const p=x.querySelector('.prog');if(p)p.style.width=(i===SH.scene&&k<1)?k*100+'%':'0'})}
   }
