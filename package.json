@@ -8,7 +8,9 @@
     "start": "node build-app.js && node bridge.js",
     "test": "node --test",
     "dev": "run_dev.bat",
-    "smoke": "node test/ui-smoke.js"
+    "smoke": "node test/ui-smoke.js",
+    "characterize": "node test/characterize.js",
+    "check": "node --test && node test/characterize.js && node test/ui-smoke.js"
   },
   "dependencies": {
     "mqtt": "^5.16.1",

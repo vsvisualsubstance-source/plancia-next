@@ -40,11 +40,24 @@ const appModules = [
   '99-laser-scenes.js'
 ];
 
-function buildAppBundle(sourceDir = path.join(__dirname, 'src')) {
+// Solo per la build di test (test/browser-harness.js): espone al browser headless
+// le parti interne che i test di caratterizzazione fotografano. La build normale
+// (app.js servito ai tablet) non le contiene.
+const TEST_HOOKS = `
+window.__planciaTest={
+  get L(){return L},set L(v){L=v},
+  W,P,TPL,DEF,NAMES,argsOf,out,set,setXY,send,fire,flush,render,ensureStageData,
+  migrations:[['migrateLegacyHeadSelectors',migrateLegacyHeadSelectors],['migrateHeadPresetWidgets',migrateHeadPresetWidgets],
+    ['migrateUiShowTimeline',migrateUiShowTimeline],['migrateUiConsolePages',migrateUiConsolePages],['migrateUiAudioPage',migrateUiAudioPage],
+    ['migrateUiNoChase',migrateUiNoChase],['migrateUiOneDmxV8',migrateUiOneDmxV8],['migrateUiLaserPage',migrateUiLaserPage],
+    ['migrateUiLaserScenes',migrateUiLaserScenes]]};`;
+
+function buildAppBundle(sourceDir = path.join(__dirname, 'src'), { testHooks = false } = {}) {
   const modules = appModules.map(file => {
     const filename = path.join(sourceDir, file);
     return fs.readFileSync(filename, 'utf8').trimEnd();
   });
+  if (testHooks) modules.push(TEST_HOOKS.trim());
 
   return `(()=>{\n${modules.join('\n\n')}\n})();\n`;
 }

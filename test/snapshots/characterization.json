@@ -1,0 +1,2819 @@
+{
+ "widgets": {
+  "fader": {
+   "label": "Fader",
+   "size": [
+    2,
+    5
+   ],
+   "args": [
+    -1
+   ],
+   "probes": [
+    {
+     "set": {
+      "value": 0.25
+     },
+     "args": [
+      -0.5
+     ]
+    }
+   ]
+  },
+  "knob": {
+   "label": "Manopola",
+   "size": [
+    2,
+    2
+   ],
+   "args": [
+    -1
+   ],
+   "probes": [
+    {
+     "set": {
+      "value": 0.75
+     },
+     "args": [
+      0.5
+     ]
+    }
+   ]
+  },
+  "button": {
+   "label": "Pulsante",
+   "size": [
+    2,
+    2
+   ],
+   "args": [
+    -1
+   ],
+   "probes": [
+    {
+     "set": {
+      "value": 1
+     },
+     "args": [
+      1
+     ]
+    },
+    {
+     "set": {
+      "value": 0,
+      "mode": "toggle"
+     },
+     "args": [
+      -1
+     ]
+    }
+   ]
+  },
+  "xy": {
+   "label": "Pad XY",
+   "size": [
+    4,
+    4
+   ],
+   "args": [
+    -1,
+    0
+   ],
+   "probes": [
+    {
+     "set": {
+      "value": 0.25,
+      "valueY": 0.75
+     },
+     "args": [
+      -0.5,
+      0.5
+     ]
+    }
+   ]
+  },
+  "meter": {
+   "label": "Indicatore",
+   "size": [
+    1,
+    5
+   ],
+   "args": [
+    -1
+   ],
+   "probes": [
+    {
+     "set": {
+      "value": 0.5
+     },
+     "args": [
+      0
+     ]
+    }
+   ]
+  },
+  "label": {
+   "label": "Testo",
+   "size": [
+    4,
+    1
+   ],
+   "args": [
+    -1
+   ],
+   "probes": [
+    {
+     "set": {},
+     "args": [
+      -1
+     ]
+    }
+   ]
+  },
+  "scenes": {
+   "label": "Scene",
+   "size": [
+    4,
+    3
+   ],
+   "args": [
+    0
+   ],
+   "probes": [
+    {
+     "set": {
+      "value": 2
+     },
+     "args": [
+      2
+     ]
+    },
+    {
+     "set": {
+      "mode": "multi",
+      "value": [
+       1,
+       0,
+       1
+      ]
+     },
+     "args": [
+      1,
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  "color": {
+   "label": "Colore",
+   "size": [
+    4,
+    4
+   ],
+   "args": [
+    1,
+    1,
+    1
+   ],
+   "probes": [
+    {
+     "set": {
+      "value": {
+       "h": 0.5,
+       "s": 1
+      }
+     },
+     "args": [
+      0,
+      1,
+      1
+     ]
+    },
+    {
+     "set": {
+      "value": {
+       "h": 0,
+       "s": 0
+      }
+     },
+     "args": [
+      1,
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  "timeline": {
+   "label": "Timeline",
+   "size": [
+    10,
+    3
+   ],
+   "args": [
+    -1
+   ],
+   "probes": [
+    {
+     "set": {},
+     "args": [
+      -1
+     ]
+    }
+   ]
+  },
+  "clock": {
+   "label": "Orologio",
+   "size": [
+    4,
+    2
+   ],
+   "args": [
+    -1
+   ],
+   "probes": [
+    {
+     "set": {},
+     "args": [
+      -1
+     ]
+    }
+   ]
+  },
+  "stage": {
+   "label": "Palco",
+   "size": [
+    8,
+    6
+   ],
+   "args": [
+    -1
+   ],
+   "probes": []
+  },
+  "gaia": {
+   "label": "Gaia",
+   "size": [
+    10,
+    8
+   ],
+   "args": [
+    -1
+   ],
+   "probes": []
+  },
+  "patchdeck": {
+   "label": "PatchDeck",
+   "size": [
+    8,
+    6
+   ],
+   "args": [
+    -1
+   ],
+   "probes": []
+  },
+  "tddevice": {
+   "label": "Device TD",
+   "size": [
+    8,
+    4
+   ],
+   "args": [
+    -1
+   ],
+   "probes": []
+  },
+  "gaiadmx": {
+   "label": "DMX stanza",
+   "size": [
+    6,
+    6
+   ],
+   "args": [
+    -1
+   ],
+   "probes": []
+  },
+  "fixgrid": {
+   "label": "Luci",
+   "size": [
+    10,
+    6
+   ],
+   "args": [
+    -1
+   ],
+   "probes": []
+  },
+  "cuestack": {
+   "label": "Scene GO",
+   "size": [
+    4,
+    6
+   ],
+   "args": [
+    -1
+   ],
+   "probes": []
+  },
+  "audiorigs": {
+   "label": "Audio",
+   "size": [
+    8,
+    6
+   ],
+   "args": [
+    -1
+   ],
+   "probes": []
+  },
+  "laser": {
+   "label": "Laser",
+   "size": [
+    8,
+    6
+   ],
+   "args": [
+    -1
+   ],
+   "probes": []
+  }
+ },
+ "messages": [
+  {
+   "type": "osc",
+   "address": "/dmx/master",
+   "args": [
+    127.5
+   ],
+   "channel": "default"
+  },
+  {
+   "type": "midi",
+   "ch": 2,
+   "cc": 7,
+   "value": 64
+  },
+  {
+   "type": "osc",
+   "address": "/dmx/blackout",
+   "args": [
+    1
+   ],
+   "channel": "dmx"
+  },
+  {
+   "type": "osc",
+   "address": "/mh/pantilt",
+   "args": [
+    0.5,
+    -0.5
+   ],
+   "channel": "default"
+  },
+  {
+   "type": "osc",
+   "address": "/dmx/scene",
+   "args": [
+    3
+   ],
+   "channel": "default"
+  },
+  {
+   "type": "osc",
+   "address": "/gaia/td/mood/calm",
+   "args": [
+    1
+   ],
+   "channel": "gaia"
+  }
+ ],
+ "templates": {
+  "show": {
+   "name": "Panoramica show",
+   "pages": [
+    {
+     "name": "Show",
+     "widgets": [
+      [
+       "stage",
+       0,
+       0,
+       11,
+       7,
+       "",
+       "push",
+       "Palco"
+      ],
+      [
+       "clock",
+       11,
+       0,
+       5,
+       2,
+       "",
+       "tod",
+       "Ora"
+      ],
+      [
+       "clock",
+       11,
+       2,
+       5,
+       2,
+       "",
+       "show",
+       "Show"
+      ],
+      [
+       "scenes",
+       11,
+       4,
+       5,
+       3,
+       "/dmx/scene",
+       "push",
+       "Scene"
+      ],
+      [
+       "timeline",
+       0,
+       7,
+       11,
+       3,
+       "/show",
+       "push",
+       "Timeline"
+      ],
+      [
+       "fader",
+       11,
+       7,
+       2,
+       3,
+       "/dmx/master",
+       "push",
+       "Master"
+      ],
+      [
+       "button",
+       13,
+       7,
+       3,
+       2,
+       "/dmx/blackout",
+       "toggle",
+       "Blackout"
+      ],
+      [
+       "button",
+       13,
+       9,
+       3,
+       1,
+       "/dmx/strobe",
+       "push",
+       "Flash strobo"
+      ]
+     ]
+    }
+   ]
+  },
+  "dmx": {
+   "name": "Luci DMX",
+   "pages": [
+    {
+     "name": "DMX",
+     "widgets": [
+      [
+       "scenes",
+       0,
+       0,
+       8,
+       5,
+       "/dmx/scene",
+       "push",
+       "Scene OSC"
+      ],
+      [
+       "scenes",
+       8,
+       0,
+       4,
+       5,
+       "",
+       "dmx-enum",
+       "Palette · Rig A"
+      ],
+      [
+       "scenes",
+       12,
+       0,
+       4,
+       5,
+       "",
+       "dmx-enum",
+       "Palette · Rig B"
+      ],
+      [
+       "audiorigs",
+       0,
+       5,
+       4,
+       2,
+       "",
+       "push",
+       "Audio"
+      ],
+      [
+       "button",
+       4,
+       5,
+       2,
+       2,
+       "/dmx/blackout",
+       "toggle",
+       "Blackout"
+      ],
+      [
+       "button",
+       6,
+       5,
+       2,
+       2,
+       "/dmx/strobe",
+       "toggle",
+       "Strobo"
+      ],
+      [
+       "fader",
+       8,
+       5,
+       4,
+       2,
+       "/dmx/fade",
+       "push",
+       "Fade (s)"
+      ],
+      [
+       "fader",
+       12,
+       5,
+       4,
+       2,
+       "/dmx/strobe/rate",
+       "push",
+       "Strobo (Hz)"
+      ],
+      [
+       "fader",
+       0,
+       7,
+       2,
+       5,
+       "/dmx/master",
+       "push",
+       "Master"
+      ],
+      [
+       "fader",
+       2,
+       7,
+       2,
+       5,
+       "/dmx/group/front",
+       "push",
+       "Front"
+      ],
+      [
+       "fader",
+       4,
+       7,
+       2,
+       5,
+       "/dmx/group/back",
+       "push",
+       "Back"
+      ],
+      [
+       "fader",
+       6,
+       7,
+       2,
+       5,
+       "/dmx/group/mh",
+       "push",
+       "Teste"
+      ],
+      [
+       "fader",
+       8,
+       7,
+       2,
+       5,
+       "/dmx/group/ledbar",
+       "push",
+       "LED bar"
+      ],
+      [
+       "fader",
+       10,
+       7,
+       2,
+       5,
+       "/dmx/group/ledwall",
+       "push",
+       "LED wall"
+      ],
+      [
+       "fader",
+       12,
+       7,
+       2,
+       5,
+       "/dmx/group/haze",
+       "push",
+       "Haze"
+      ],
+      [
+       "fader",
+       14,
+       7,
+       2,
+       5,
+       "/dmx/group/blinder",
+       "push",
+       "Blinder"
+      ]
+     ]
+    }
+   ]
+  },
+  "mh": {
+   "name": "Teste mobili",
+   "pages": [
+    {
+     "name": "Teste mobili",
+     "widgets": [
+      [
+       "scenes",
+       0,
+       0,
+       8,
+       2,
+       "/mh/select/heads",
+       "head-select",
+       "Selezione teste TD"
+      ],
+      [
+       "scenes",
+       8,
+       0,
+       4,
+       2,
+       "/mh/position",
+       "push",
+       "Posizioni"
+      ],
+      [
+       "scenes",
+       12,
+       0,
+       4,
+       2,
+       "",
+       "head-presets",
+       "Preset PTZ"
+      ],
+      [
+       "xy",
+       0,
+       2,
+       6,
+       8,
+       "/mh/pantilt",
+       "push",
+       "Pan / Tilt"
+      ],
+      [
+       "color",
+       6,
+       2,
+       4,
+       5,
+       "/mh/color",
+       "push",
+       "Colore"
+      ],
+      [
+       "scenes",
+       6,
+       7,
+       4,
+       3,
+       "/mh/gobo",
+       "push",
+       "Gobo"
+      ],
+      [
+       "fader",
+       10,
+       2,
+       2,
+       5,
+       "/mh/dimmer",
+       "push",
+       "Dimmer"
+      ],
+      [
+       "fader",
+       12,
+       2,
+       2,
+       5,
+       "/mh/zoom",
+       "push",
+       "Zoom"
+      ],
+      [
+       "fader",
+       14,
+       2,
+       2,
+       5,
+       "/mh/focus",
+       "push",
+       "Focus"
+      ],
+      [
+       "button",
+       10,
+       7,
+       2,
+       3,
+       "/mh/strobe",
+       "toggle",
+       "Strobo"
+      ],
+      [
+       "button",
+       12,
+       7,
+       2,
+       3,
+       "/mh/home",
+       "push",
+       "Home"
+      ],
+      [
+       "button",
+       14,
+       7,
+       2,
+       1,
+       "/mh/follow",
+       "toggle",
+       "Segui"
+      ],
+      [
+       "button",
+       14,
+       8,
+       2,
+       2,
+       "/mh/release",
+       "push",
+       "Rilascia"
+      ]
+     ]
+    }
+   ]
+  },
+  "timeline": {
+   "name": "Timeline (preparazione)",
+   "pages": [
+    {
+     "name": "Timeline",
+     "widgets": [
+      [
+       "timeline",
+       0,
+       0,
+       11,
+       3,
+       "/show",
+       "push",
+       "Timeline show"
+      ],
+      [
+       "scenes",
+       11,
+       0,
+       5,
+       3,
+       "/dmx/scene",
+       "push",
+       "Scene · DMX Master"
+      ],
+      [
+       "scenes",
+       0,
+       3,
+       4,
+       4,
+       "",
+       "dmx-enum",
+       "Palette FRONT · rig A"
+      ],
+      [
+       "scenes",
+       4,
+       3,
+       4,
+       4,
+       "",
+       "dmx-enum",
+       "Palette BACK · rig B"
+      ],
+      [
+       "scenes",
+       8,
+       3,
+       3,
+       4,
+       "",
+       "dmx-enum",
+       "Palette LED bar"
+      ],
+      [
+       "scenes",
+       11,
+       3,
+       3,
+       4,
+       "/mh/position",
+       "push",
+       "Posizioni teste"
+      ],
+      [
+       "scenes",
+       14,
+       3,
+       2,
+       4,
+       "",
+       "head-presets",
+       "Preset PTZ"
+      ],
+      [
+       "scenes",
+       0,
+       7,
+       4,
+       3,
+       "/mh/select/heads",
+       "head-select",
+       "Selezione teste"
+      ],
+      [
+       "color",
+       4,
+       7,
+       3,
+       3,
+       "/mh/color",
+       "push",
+       "Colore teste"
+      ],
+      [
+       "button",
+       7,
+       7,
+       2,
+       3,
+       "/dmx/strobe",
+       "toggle",
+       "Strobo"
+      ],
+      [
+       "fader",
+       9,
+       7,
+       2,
+       3,
+       "/dmx/strobe/rate",
+       "push",
+       "Strobo (Hz)"
+      ],
+      [
+       "button",
+       11,
+       7,
+       3,
+       3,
+       "/show/go",
+       "push",
+       "GO"
+      ],
+      [
+       "button",
+       14,
+       7,
+       2,
+       3,
+       "/show/back",
+       "push",
+       "Back"
+      ]
+     ]
+    }
+   ]
+  },
+  "palco": {
+   "name": "Design palco",
+   "pages": [
+    {
+     "name": "Palco",
+     "widgets": [
+      [
+       "stage",
+       0,
+       0,
+       12,
+       10,
+       "",
+       "push",
+       "Design"
+      ],
+      [
+       "color",
+       12,
+       0,
+       4,
+       4,
+       "/led/color",
+       "push",
+       "LED wall"
+      ],
+      [
+       "scenes",
+       12,
+       4,
+       4,
+       3,
+       "/led/mode",
+       "push",
+       "Contenuto LED"
+      ],
+      [
+       "fader",
+       12,
+       7,
+       2,
+       3,
+       "/led/bright",
+       "push",
+       "LED"
+      ],
+      [
+       "fader",
+       14,
+       7,
+       2,
+       3,
+       "/dmx/group/blinder",
+       "push",
+       "Blinder"
+      ]
+     ]
+    }
+   ]
+  },
+  "mix": {
+   "name": "Mixer live",
+   "pages": [
+    {
+     "name": "Mix",
+     "widgets": [
+      [
+       "fader",
+       0,
+       0,
+       2,
+       6,
+       "/mix/drums",
+       "push",
+       "Drums"
+      ],
+      [
+       "fader",
+       2,
+       0,
+       2,
+       6,
+       "/mix/bass",
+       "push",
+       "Bass"
+      ],
+      [
+       "fader",
+       4,
+       0,
+       2,
+       6,
+       "/mix/piano",
+       "push",
+       "Piano"
+      ],
+      [
+       "fader",
+       6,
+       0,
+       2,
+       6,
+       "/mix/synth",
+       "push",
+       "Synth"
+      ],
+      [
+       "meter",
+       8,
+       0,
+       1,
+       6,
+       "/meter/l",
+       "push",
+       "L"
+      ],
+      [
+       "meter",
+       9,
+       0,
+       1,
+       6,
+       "/meter/r",
+       "push",
+       "R"
+      ],
+      [
+       "knob",
+       10,
+       0,
+       2,
+       3,
+       "/fx/reverb",
+       "push",
+       "Reverb"
+      ],
+      [
+       "knob",
+       12,
+       0,
+       2,
+       3,
+       "/fx/delay",
+       "push",
+       "Delay"
+      ],
+      [
+       "knob",
+       14,
+       0,
+       2,
+       3,
+       "/fx/cutoff",
+       "push",
+       "Cutoff"
+      ],
+      [
+       "xy",
+       10,
+       3,
+       6,
+       5,
+       "/fx/xy",
+       "push",
+       "Filtro XY"
+      ],
+      [
+       "button",
+       0,
+       6,
+       2,
+       2,
+       "/live/clip/1",
+       "push",
+       "Clip 1"
+      ],
+      [
+       "button",
+       2,
+       6,
+       2,
+       2,
+       "/live/clip/2",
+       "push",
+       "Clip 2"
+      ],
+      [
+       "button",
+       4,
+       6,
+       2,
+       2,
+       "/live/clip/3",
+       "push",
+       "Clip 3"
+      ],
+      [
+       "button",
+       6,
+       6,
+       2,
+       2,
+       "/live/clip/4",
+       "push",
+       "Clip 4"
+      ],
+      [
+       "button",
+       8,
+       6,
+       2,
+       2,
+       "/fx/mute",
+       "toggle",
+       "Mute FX"
+      ],
+      [
+       "label",
+       0,
+       8,
+       4,
+       2,
+       "",
+       "push",
+       "Master"
+      ],
+      [
+       "fader",
+       4,
+       8,
+       12,
+       2,
+       "/mix/master",
+       "push",
+       "Volume"
+      ]
+     ]
+    }
+   ]
+  },
+  "gaia": {
+   "name": "Gaia live",
+   "pages": [
+    {
+     "name": "Gaia",
+     "widgets": [
+      [
+       "gaia",
+       0,
+       0,
+       10,
+       10,
+       "",
+       "push",
+       "Gaia"
+      ],
+      [
+       "clock",
+       10,
+       0,
+       6,
+       2,
+       "",
+       "tod",
+       "Ora"
+      ],
+      [
+       "gaiadmx",
+       10,
+       2,
+       6,
+       8,
+       "",
+       "push",
+       "Luci stanza"
+      ]
+     ]
+    },
+    {
+     "name": "PatchDeck",
+     "widgets": [
+      [
+       "patchdeck",
+       0,
+       0,
+       8,
+       6,
+       "",
+       "push",
+       "Deck A"
+      ],
+      [
+       "patchdeck",
+       8,
+       0,
+       8,
+       6,
+       "",
+       "push",
+       "Deck B"
+      ],
+      [
+       "tddevice",
+       0,
+       6,
+       9,
+       4,
+       "",
+       "push",
+       "FX e servizi"
+      ],
+      [
+       "tddevice",
+       9,
+       6,
+       7,
+       4,
+       "",
+       "push",
+       "Controller"
+      ]
+     ]
+    },
+    {
+     "name": "DMX V8",
+     "widgets": [
+      [
+       "tddevice",
+       0,
+       0,
+       10,
+       10,
+       "",
+       "push",
+       "DMX V8"
+      ],
+      [
+       "gaiadmx",
+       10,
+       0,
+       6,
+       10,
+       "",
+       "push",
+       "DMX stanza"
+      ]
+     ]
+    }
+   ]
+  },
+  "regia": {
+   "name": "Regia luci",
+   "pages": [
+    {
+     "name": "Regia",
+     "widgets": [
+      [
+       "cuestack",
+       0,
+       0,
+       4,
+       6,
+       "",
+       "push",
+       "Scene GO"
+      ],
+      [
+       "scenes",
+       4,
+       0,
+       6,
+       4,
+       "/dmx/scene",
+       "push",
+       "Scene · DMX Master"
+      ],
+      [
+       "stage",
+       10,
+       0,
+       6,
+       4,
+       "",
+       "push",
+       "Palco"
+      ],
+      [
+       "audiorigs",
+       4,
+       4,
+       3,
+       2,
+       "",
+       "push",
+       "Audio"
+      ],
+      [
+       "fader",
+       7,
+       4,
+       3,
+       2,
+       "/dmx/fade",
+       "push",
+       "Fade (s)"
+      ],
+      [
+       "fader",
+       10,
+       4,
+       3,
+       2,
+       "/dmx/strobe/rate",
+       "push",
+       "Strobo (Hz)"
+      ],
+      [
+       "clock",
+       13,
+       4,
+       3,
+       2,
+       "",
+       "show",
+       "Show"
+      ],
+      [
+       "fader",
+       0,
+       6,
+       2,
+       4,
+       "/dmx/master",
+       "push",
+       "Master"
+      ],
+      [
+       "fader",
+       2,
+       6,
+       2,
+       4,
+       "/dmx/group/front",
+       "push",
+       "Front"
+      ],
+      [
+       "fader",
+       4,
+       6,
+       2,
+       4,
+       "/dmx/group/back",
+       "push",
+       "Back"
+      ],
+      [
+       "fader",
+       6,
+       6,
+       2,
+       4,
+       "/dmx/group/mh",
+       "push",
+       "Teste"
+      ],
+      [
+       "fader",
+       8,
+       6,
+       2,
+       4,
+       "/dmx/group/ledbar",
+       "push",
+       "LED bar"
+      ],
+      [
+       "fader",
+       10,
+       6,
+       2,
+       4,
+       "/dmx/group/haze",
+       "push",
+       "Haze"
+      ],
+      [
+       "fader",
+       12,
+       6,
+       2,
+       4,
+       "/dmx/group/blinder",
+       "push",
+       "Blinder"
+      ],
+      [
+       "button",
+       14,
+       6,
+       2,
+       2,
+       "/dmx/blackout",
+       "toggle",
+       "Blackout"
+      ],
+      [
+       "button",
+       14,
+       8,
+       2,
+       2,
+       "/dmx/strobe",
+       "push",
+       "Flash strobo"
+      ]
+     ]
+    }
+   ]
+  },
+  "luci": {
+   "name": "Luci · colori singoli",
+   "pages": [
+    {
+     "name": "Luci",
+     "widgets": [
+      [
+       "fixgrid",
+       0,
+       0,
+       16,
+       10,
+       "",
+       "push",
+       "Luci"
+      ]
+     ]
+    }
+   ]
+  },
+  "audio": {
+   "name": "Audio · reattività",
+   "pages": [
+    {
+     "name": "Audio",
+     "widgets": [
+      [
+       "audiorigs",
+       0,
+       0,
+       16,
+       10,
+       "",
+       "push",
+       "Audio · reattività dei gruppi"
+      ]
+     ]
+    }
+   ]
+  },
+  "laser": {
+   "name": "Laser",
+   "pages": [
+    {
+     "name": "Laser",
+     "widgets": [
+      [
+       "laser",
+       0,
+       0,
+       16,
+       10,
+       "",
+       "push",
+       "Laser · LaserCube"
+      ]
+     ]
+    }
+   ]
+  },
+  "full": {
+   "name": "Show completo",
+   "pages": [
+    {
+     "name": "Gaia",
+     "widgets": [
+      [
+       "gaia",
+       0,
+       0,
+       10,
+       10,
+       "",
+       "push",
+       "Gaia"
+      ],
+      [
+       "clock",
+       10,
+       0,
+       6,
+       2,
+       "",
+       "tod",
+       "Ora"
+      ],
+      [
+       "gaiadmx",
+       10,
+       2,
+       6,
+       8,
+       "",
+       "push",
+       "Luci stanza"
+      ]
+     ]
+    },
+    {
+     "name": "PatchDeck",
+     "widgets": [
+      [
+       "patchdeck",
+       0,
+       0,
+       8,
+       6,
+       "",
+       "push",
+       "Deck A"
+      ],
+      [
+       "patchdeck",
+       8,
+       0,
+       8,
+       6,
+       "",
+       "push",
+       "Deck B"
+      ],
+      [
+       "tddevice",
+       0,
+       6,
+       9,
+       4,
+       "",
+       "push",
+       "FX e servizi"
+      ],
+      [
+       "tddevice",
+       9,
+       6,
+       7,
+       4,
+       "",
+       "push",
+       "Controller"
+      ]
+     ]
+    },
+    {
+     "name": "DMX V8",
+     "widgets": [
+      [
+       "tddevice",
+       0,
+       0,
+       10,
+       10,
+       "",
+       "push",
+       "DMX V8"
+      ],
+      [
+       "gaiadmx",
+       10,
+       0,
+       6,
+       10,
+       "",
+       "push",
+       "DMX stanza"
+      ]
+     ]
+    },
+    {
+     "name": "Show",
+     "widgets": [
+      [
+       "stage",
+       0,
+       0,
+       11,
+       7,
+       "",
+       "push",
+       "Palco"
+      ],
+      [
+       "clock",
+       11,
+       0,
+       5,
+       2,
+       "",
+       "tod",
+       "Ora"
+      ],
+      [
+       "clock",
+       11,
+       2,
+       5,
+       2,
+       "",
+       "show",
+       "Show"
+      ],
+      [
+       "scenes",
+       11,
+       4,
+       5,
+       3,
+       "/dmx/scene",
+       "push",
+       "Scene"
+      ],
+      [
+       "timeline",
+       0,
+       7,
+       11,
+       3,
+       "/show",
+       "push",
+       "Timeline"
+      ],
+      [
+       "fader",
+       11,
+       7,
+       2,
+       3,
+       "/dmx/master",
+       "push",
+       "Master"
+      ],
+      [
+       "button",
+       13,
+       7,
+       3,
+       2,
+       "/dmx/blackout",
+       "toggle",
+       "Blackout"
+      ],
+      [
+       "button",
+       13,
+       9,
+       3,
+       1,
+       "/dmx/strobe",
+       "push",
+       "Flash strobo"
+      ]
+     ]
+    },
+    {
+     "name": "Regia",
+     "widgets": [
+      [
+       "cuestack",
+       0,
+       0,
+       4,
+       6,
+       "",
+       "push",
+       "Scene GO"
+      ],
+      [
+       "scenes",
+       4,
+       0,
+       6,
+       4,
+       "/dmx/scene",
+       "push",
+       "Scene · DMX Master"
+      ],
+      [
+       "stage",
+       10,
+       0,
+       6,
+       4,
+       "",
+       "push",
+       "Palco"
+      ],
+      [
+       "audiorigs",
+       4,
+       4,
+       3,
+       2,
+       "",
+       "push",
+       "Audio"
+      ],
+      [
+       "fader",
+       7,
+       4,
+       3,
+       2,
+       "/dmx/fade",
+       "push",
+       "Fade (s)"
+      ],
+      [
+       "fader",
+       10,
+       4,
+       3,
+       2,
+       "/dmx/strobe/rate",
+       "push",
+       "Strobo (Hz)"
+      ],
+      [
+       "clock",
+       13,
+       4,
+       3,
+       2,
+       "",
+       "show",
+       "Show"
+      ],
+      [
+       "fader",
+       0,
+       6,
+       2,
+       4,
+       "/dmx/master",
+       "push",
+       "Master"
+      ],
+      [
+       "fader",
+       2,
+       6,
+       2,
+       4,
+       "/dmx/group/front",
+       "push",
+       "Front"
+      ],
+      [
+       "fader",
+       4,
+       6,
+       2,
+       4,
+       "/dmx/group/back",
+       "push",
+       "Back"
+      ],
+      [
+       "fader",
+       6,
+       6,
+       2,
+       4,
+       "/dmx/group/mh",
+       "push",
+       "Teste"
+      ],
+      [
+       "fader",
+       8,
+       6,
+       2,
+       4,
+       "/dmx/group/ledbar",
+       "push",
+       "LED bar"
+      ],
+      [
+       "fader",
+       10,
+       6,
+       2,
+       4,
+       "/dmx/group/haze",
+       "push",
+       "Haze"
+      ],
+      [
+       "fader",
+       12,
+       6,
+       2,
+       4,
+       "/dmx/group/blinder",
+       "push",
+       "Blinder"
+      ],
+      [
+       "button",
+       14,
+       6,
+       2,
+       2,
+       "/dmx/blackout",
+       "toggle",
+       "Blackout"
+      ],
+      [
+       "button",
+       14,
+       8,
+       2,
+       2,
+       "/dmx/strobe",
+       "push",
+       "Flash strobo"
+      ]
+     ]
+    },
+    {
+     "name": "Luci",
+     "widgets": [
+      [
+       "fixgrid",
+       0,
+       0,
+       16,
+       10,
+       "",
+       "push",
+       "Luci"
+      ]
+     ]
+    },
+    {
+     "name": "Audio",
+     "widgets": [
+      [
+       "audiorigs",
+       0,
+       0,
+       16,
+       10,
+       "",
+       "push",
+       "Audio · reattività dei gruppi"
+      ]
+     ]
+    },
+    {
+     "name": "Laser",
+     "widgets": [
+      [
+       "laser",
+       0,
+       0,
+       16,
+       10,
+       "",
+       "push",
+       "Laser · LaserCube"
+      ]
+     ]
+    },
+    {
+     "name": "DMX",
+     "widgets": [
+      [
+       "scenes",
+       0,
+       0,
+       8,
+       5,
+       "/dmx/scene",
+       "push",
+       "Scene OSC"
+      ],
+      [
+       "scenes",
+       8,
+       0,
+       4,
+       5,
+       "",
+       "dmx-enum",
+       "Palette · Rig A"
+      ],
+      [
+       "scenes",
+       12,
+       0,
+       4,
+       5,
+       "",
+       "dmx-enum",
+       "Palette · Rig B"
+      ],
+      [
+       "audiorigs",
+       0,
+       5,
+       4,
+       2,
+       "",
+       "push",
+       "Audio"
+      ],
+      [
+       "button",
+       4,
+       5,
+       2,
+       2,
+       "/dmx/blackout",
+       "toggle",
+       "Blackout"
+      ],
+      [
+       "button",
+       6,
+       5,
+       2,
+       2,
+       "/dmx/strobe",
+       "toggle",
+       "Strobo"
+      ],
+      [
+       "fader",
+       8,
+       5,
+       4,
+       2,
+       "/dmx/fade",
+       "push",
+       "Fade (s)"
+      ],
+      [
+       "fader",
+       12,
+       5,
+       4,
+       2,
+       "/dmx/strobe/rate",
+       "push",
+       "Strobo (Hz)"
+      ],
+      [
+       "fader",
+       0,
+       7,
+       2,
+       5,
+       "/dmx/master",
+       "push",
+       "Master"
+      ],
+      [
+       "fader",
+       2,
+       7,
+       2,
+       5,
+       "/dmx/group/front",
+       "push",
+       "Front"
+      ],
+      [
+       "fader",
+       4,
+       7,
+       2,
+       5,
+       "/dmx/group/back",
+       "push",
+       "Back"
+      ],
+      [
+       "fader",
+       6,
+       7,
+       2,
+       5,
+       "/dmx/group/mh",
+       "push",
+       "Teste"
+      ],
+      [
+       "fader",
+       8,
+       7,
+       2,
+       5,
+       "/dmx/group/ledbar",
+       "push",
+       "LED bar"
+      ],
+      [
+       "fader",
+       10,
+       7,
+       2,
+       5,
+       "/dmx/group/ledwall",
+       "push",
+       "LED wall"
+      ],
+      [
+       "fader",
+       12,
+       7,
+       2,
+       5,
+       "/dmx/group/haze",
+       "push",
+       "Haze"
+      ],
+      [
+       "fader",
+       14,
+       7,
+       2,
+       5,
+       "/dmx/group/blinder",
+       "push",
+       "Blinder"
+      ]
+     ]
+    },
+    {
+     "name": "Teste mobili",
+     "widgets": [
+      [
+       "scenes",
+       0,
+       0,
+       8,
+       2,
+       "/mh/select/heads",
+       "head-select",
+       "Selezione teste TD"
+      ],
+      [
+       "scenes",
+       8,
+       0,
+       4,
+       2,
+       "/mh/position",
+       "push",
+       "Posizioni"
+      ],
+      [
+       "scenes",
+       12,
+       0,
+       4,
+       2,
+       "",
+       "head-presets",
+       "Preset PTZ"
+      ],
+      [
+       "xy",
+       0,
+       2,
+       6,
+       8,
+       "/mh/pantilt",
+       "push",
+       "Pan / Tilt"
+      ],
+      [
+       "color",
+       6,
+       2,
+       4,
+       5,
+       "/mh/color",
+       "push",
+       "Colore"
+      ],
+      [
+       "scenes",
+       6,
+       7,
+       4,
+       3,
+       "/mh/gobo",
+       "push",
+       "Gobo"
+      ],
+      [
+       "fader",
+       10,
+       2,
+       2,
+       5,
+       "/mh/dimmer",
+       "push",
+       "Dimmer"
+      ],
+      [
+       "fader",
+       12,
+       2,
+       2,
+       5,
+       "/mh/zoom",
+       "push",
+       "Zoom"
+      ],
+      [
+       "fader",
+       14,
+       2,
+       2,
+       5,
+       "/mh/focus",
+       "push",
+       "Focus"
+      ],
+      [
+       "button",
+       10,
+       7,
+       2,
+       3,
+       "/mh/strobe",
+       "toggle",
+       "Strobo"
+      ],
+      [
+       "button",
+       12,
+       7,
+       2,
+       3,
+       "/mh/home",
+       "push",
+       "Home"
+      ],
+      [
+       "button",
+       14,
+       7,
+       2,
+       1,
+       "/mh/follow",
+       "toggle",
+       "Segui"
+      ],
+      [
+       "button",
+       14,
+       8,
+       2,
+       2,
+       "/mh/release",
+       "push",
+       "Rilascia"
+      ]
+     ]
+    },
+    {
+     "name": "Timeline",
+     "widgets": [
+      [
+       "timeline",
+       0,
+       0,
+       11,
+       3,
+       "/show",
+       "push",
+       "Timeline show"
+      ],
+      [
+       "scenes",
+       11,
+       0,
+       5,
+       3,
+       "/dmx/scene",
+       "push",
+       "Scene · DMX Master"
+      ],
+      [
+       "scenes",
+       0,
+       3,
+       4,
+       4,
+       "",
+       "dmx-enum",
+       "Palette FRONT · rig A"
+      ],
+      [
+       "scenes",
+       4,
+       3,
+       4,
+       4,
+       "",
+       "dmx-enum",
+       "Palette BACK · rig B"
+      ],
+      [
+       "scenes",
+       8,
+       3,
+       3,
+       4,
+       "",
+       "dmx-enum",
+       "Palette LED bar"
+      ],
+      [
+       "scenes",
+       11,
+       3,
+       3,
+       4,
+       "/mh/position",
+       "push",
+       "Posizioni teste"
+      ],
+      [
+       "scenes",
+       14,
+       3,
+       2,
+       4,
+       "",
+       "head-presets",
+       "Preset PTZ"
+      ],
+      [
+       "scenes",
+       0,
+       7,
+       4,
+       3,
+       "/mh/select/heads",
+       "head-select",
+       "Selezione teste"
+      ],
+      [
+       "color",
+       4,
+       7,
+       3,
+       3,
+       "/mh/color",
+       "push",
+       "Colore teste"
+      ],
+      [
+       "button",
+       7,
+       7,
+       2,
+       3,
+       "/dmx/strobe",
+       "toggle",
+       "Strobo"
+      ],
+      [
+       "fader",
+       9,
+       7,
+       2,
+       3,
+       "/dmx/strobe/rate",
+       "push",
+       "Strobo (Hz)"
+      ],
+      [
+       "button",
+       11,
+       7,
+       3,
+       3,
+       "/show/go",
+       "push",
+       "GO"
+      ],
+      [
+       "button",
+       14,
+       7,
+       2,
+       3,
+       "/show/back",
+       "push",
+       "Back"
+      ]
+     ]
+    },
+    {
+     "name": "Palco",
+     "widgets": [
+      [
+       "stage",
+       0,
+       0,
+       12,
+       10,
+       "",
+       "push",
+       "Design"
+      ],
+      [
+       "color",
+       12,
+       0,
+       4,
+       4,
+       "/led/color",
+       "push",
+       "LED wall"
+      ],
+      [
+       "scenes",
+       12,
+       4,
+       4,
+       3,
+       "/led/mode",
+       "push",
+       "Contenuto LED"
+      ],
+      [
+       "fader",
+       12,
+       7,
+       2,
+       3,
+       "/led/bright",
+       "push",
+       "LED"
+      ],
+      [
+       "fader",
+       14,
+       7,
+       2,
+       3,
+       "/dmx/group/blinder",
+       "push",
+       "Blinder"
+      ]
+     ]
+    },
+    {
+     "name": "Mix",
+     "widgets": [
+      [
+       "fader",
+       0,
+       0,
+       2,
+       6,
+       "/mix/drums",
+       "push",
+       "Drums"
+      ],
+      [
+       "fader",
+       2,
+       0,
+       2,
+       6,
+       "/mix/bass",
+       "push",
+       "Bass"
+      ],
+      [
+       "fader",
+       4,
+       0,
+       2,
+       6,
+       "/mix/piano",
+       "push",
+       "Piano"
+      ],
+      [
+       "fader",
+       6,
+       0,
+       2,
+       6,
+       "/mix/synth",
+       "push",
+       "Synth"
+      ],
+      [
+       "meter",
+       8,
+       0,
+       1,
+       6,
+       "/meter/l",
+       "push",
+       "L"
+      ],
+      [
+       "meter",
+       9,
+       0,
+       1,
+       6,
+       "/meter/r",
+       "push",
+       "R"
+      ],
+      [
+       "knob",
+       10,
+       0,
+       2,
+       3,
+       "/fx/reverb",
+       "push",
+       "Reverb"
+      ],
+      [
+       "knob",
+       12,
+       0,
+       2,
+       3,
+       "/fx/delay",
+       "push",
+       "Delay"
+      ],
+      [
+       "knob",
+       14,
+       0,
+       2,
+       3,
+       "/fx/cutoff",
+       "push",
+       "Cutoff"
+      ],
+      [
+       "xy",
+       10,
+       3,
+       6,
+       5,
+       "/fx/xy",
+       "push",
+       "Filtro XY"
+      ],
+      [
+       "button",
+       0,
+       6,
+       2,
+       2,
+       "/live/clip/1",
+       "push",
+       "Clip 1"
+      ],
+      [
+       "button",
+       2,
+       6,
+       2,
+       2,
+       "/live/clip/2",
+       "push",
+       "Clip 2"
+      ],
+      [
+       "button",
+       4,
+       6,
+       2,
+       2,
+       "/live/clip/3",
+       "push",
+       "Clip 3"
+      ],
+      [
+       "button",
+       6,
+       6,
+       2,
+       2,
+       "/live/clip/4",
+       "push",
+       "Clip 4"
+      ],
+      [
+       "button",
+       8,
+       6,
+       2,
+       2,
+       "/fx/mute",
+       "toggle",
+       "Mute FX"
+      ],
+      [
+       "label",
+       0,
+       8,
+       4,
+       2,
+       "",
+       "push",
+       "Master"
+      ],
+      [
+       "fader",
+       4,
+       8,
+       12,
+       2,
+       "/mix/master",
+       "push",
+       "Volume"
+      ]
+     ]
+    }
+   ]
+  }
+ },
+ "migrations": {
+  "steps": [
+   [
+    "migrateLegacyHeadSelectors",
+    0
+   ],
+   [
+    "migrateHeadPresetWidgets",
+    0
+   ],
+   [
+    "migrateUiShowTimeline",
+    1
+   ],
+   [
+    "migrateUiConsolePages",
+    2
+   ],
+   [
+    "migrateUiAudioPage",
+    3
+   ],
+   [
+    "migrateUiNoChase",
+    4
+   ],
+   [
+    "migrateUiOneDmxV8",
+    5
+   ],
+   [
+    "migrateUiLaserPage",
+    6
+   ],
+   [
+    "migrateUiLaserScenes",
+    7
+   ]
+  ],
+  "uiRev": 7,
+  "pages": [
+   {
+    "name": "Show",
+    "widgets": [
+     [
+      "timeline",
+      "/show",
+      "push",
+      "Timeline"
+     ]
+    ]
+   },
+   {
+    "name": "Luci",
+    "widgets": [
+     [
+      "fixgrid",
+      "",
+      "push",
+      "Luci"
+     ]
+    ]
+   },
+   {
+    "name": "Audio",
+    "widgets": [
+     [
+      "audiorigs",
+      "",
+      "push",
+      "Audio · reattività dei gruppi"
+     ]
+    ]
+   },
+   {
+    "name": "Laser",
+    "widgets": [
+     [
+      "laser",
+      "",
+      "push",
+      "Laser · LaserCube"
+     ]
+    ]
+   },
+   {
+    "name": "Timeline",
+    "widgets": [
+     [
+      "timeline",
+      "/show",
+      "push",
+      "Timeline show"
+     ],
+     [
+      "scenes",
+      "/dmx/scene",
+      "push",
+      "Scene · DMX Master"
+     ],
+     [
+      "scenes",
+      "",
+      "dmx-enum",
+      "Palette FRONT · rig A"
+     ],
+     [
+      "scenes",
+      "",
+      "dmx-enum",
+      "Palette BACK · rig B"
+     ],
+     [
+      "scenes",
+      "",
+      "dmx-enum",
+      "Palette LED bar"
+     ],
+     [
+      "scenes",
+      "/mh/position",
+      "push",
+      "Posizioni teste"
+     ],
+     [
+      "scenes",
+      "",
+      "head-presets",
+      "Preset PTZ"
+     ],
+     [
+      "scenes",
+      "/mh/select/heads",
+      "head-select",
+      "Selezione teste"
+     ],
+     [
+      "color",
+      "/mh/color",
+      "push",
+      "Colore teste"
+     ],
+     [
+      "button",
+      "/dmx/strobe",
+      "toggle",
+      "Strobo"
+     ],
+     [
+      "fader",
+      "/dmx/strobe/rate",
+      "push",
+      "Strobo (Hz)"
+     ],
+     [
+      "button",
+      "/show/go",
+      "push",
+      "GO"
+     ],
+     [
+      "button",
+      "/show/back",
+      "push",
+      "Back"
+     ]
+    ]
+   },
+   {
+    "name": "Teste mobili",
+    "widgets": [
+     [
+      "scenes",
+      "/mh/select/heads",
+      "head-select",
+      "Scene"
+     ],
+     [
+      "scenes",
+      "/mh/position",
+      "push",
+      "Scene"
+     ],
+     [
+      "scenes",
+      "",
+      "head-presets",
+      "Preset PTZ"
+     ]
+    ]
+   },
+   {
+    "name": "Regia",
+    "widgets": [
+     [
+      "audiorigs",
+      "",
+      "push",
+      "Audio"
+     ]
+    ]
+   },
+   {
+    "name": "DMX V8",
+    "widgets": [
+     [
+      "tddevice",
+      "",
+      "push",
+      "Device TD"
+     ]
+    ]
+   }
+  ],
+  "laserScenes": [
+   "tpl-cerchio",
+   "tpl-quadrato",
+   "tpl-triangolo",
+   "tpl-stella",
+   "tpl-spirale",
+   "tpl-onda",
+   "tpl-lissajous",
+   "tpl-tunnel",
+   "tpl-raggiera",
+   "tpl-cuore",
+   "tpl-infinito",
+   "tpl-scanner",
+   "tpl-griglia"
+  ]
+ },
+ "layout": {
+  "idempotentOnReload": true,
+  "pages": 13
+ }
+}

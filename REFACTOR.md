@@ -58,8 +58,17 @@ Problemi concreti visti lavorandoci:
      aperta, eccezioni ed errori di console raccolti, uno screenshot per
      pagina in `test-output/smoke/` (+ `report.json`). Prima del refactor:
      13 pagine, 0 problemi. Verificato che intercetta un errore inserito;
-   - test di caratterizzazione: layout JSON andata/ritorno, `argsOf` per
-     ogni tipo di widget, catena `uiRev`, messaggi OSC/MIDI generati.
+   - FATTO: `npm run characterize` (`test/characterize.js`): build di test
+     con `window.__planciaTest` (opzione `testHooks` di `build-app.js`, assente
+     nel bundle dei tablet) e confronto con `test/snapshots/characterization.json`:
+     `argsOf` di tutti i 19 tipi di widget a valori scelti, messaggi davvero
+     spediti al bridge (OSC con canale, MIDI CC), pagine dei 12 template,
+     un layout di vecchio formato lungo tutta la catena `uiRev` (0 -> 7),
+     layout dei dati veri identico dopo un ricaricamento. Deterministico;
+     verificato che un pulsante invertito da' 4 differenze puntuali.
+     Un cambio voluto si registra con `npm run characterize -- --update`.
+   - `npm run check` = test unitari + caratterizzazione + smoke: da lanciare
+     prima di ogni commit del refactor.
 1. **Avvio esplicito**: `init()` chiamato in fondo al bundle; nessun
    effetto collaterale durante la valutazione dei moduli.
 2. **Registro dei widget**: per tipo `{defaults, label, build, paint,
