@@ -6,6 +6,7 @@ const path = require('path');
 
 const appModules = [
   '00-core-state.js',
+  '05-widget-registry.js',
   '10-show-data.js',
   '20-layout-and-templates.js',
   '30-show-engine.js',
@@ -47,7 +48,7 @@ const appModules = [
 const TEST_HOOKS = `
 window.__planciaTest={
   get L(){return L},set L(v){L=v},
-  W,P,TPL,DEF,NAMES,argsOf,out,set,setXY,send,fire,flush,render,ensureStageData,
+  G,W,P,TPL,DEF,NAMES,argsOf,out,set,setXY,send,fire,flush,render,ensureStageData,widgetType,
   migrations:[['migrateLegacyHeadSelectors',migrateLegacyHeadSelectors],['migrateHeadPresetWidgets',migrateHeadPresetWidgets],
     ['migrateUiShowTimeline',migrateUiShowTimeline],['migrateUiConsolePages',migrateUiConsolePages],['migrateUiAudioPage',migrateUiAudioPage],
     ['migrateUiNoChase',migrateUiNoChase],['migrateUiOneDmxV8',migrateUiOneDmxV8],['migrateUiLaserPage',migrateUiLaserPage],

@@ -76,9 +76,18 @@ Problemi concreti visti lavorandoci:
    anche `const`. Restano a livello di modulo solo dichiarazioni, listener e
    timer (verificato modulo per modulo). Un test impedisce di tornare indietro.
    Caratterizzazione identica, smoke 13/0.
-2. **Registro dei widget**: per tipo `{defaults, label, build, paint,
-   onPointer, tick, help}`. Pilota su `laser`, `audiorigs`, `fixgrid`; poi
-   un tipo per commit. Alla fine spariscono gli switch.
+2. **Registro dei widget** — IN CORSO. `src/05-widget-registry.js`:
+   `registerWidget(type, {size, label, showsValue, showsAddr, inner,
+   onPointer, tick, help})`; i cinque punti di smistamento (DEF/NAMES,
+   interno/valore/indirizzo, tocco, loop, aiuto) consultano prima il registro,
+   i tipi non registrati passano ancora dagli switch.
+   - `laser`: FATTO, registrato in `99-laser.js`, sparito dagli switch
+     (un test lo impedisce per ogni tipo registrato). Caratterizzazione
+     identica; `test/laser-widget.js` prova tocco, loop e aiuto nel browser
+     con un gateway finto. Trovato e corretto l'aiuto vecchio (parlava della
+     modalita' DMX tolta).
+   - Prossimi: `audiorigs`, `fixgrid`, `cuestack`, poi gli altri un tipo per
+     commit. Alla fine spariscono gli switch.
 3. **Bus dei messaggi**: OSC e MQTT in arrivo indicizzati per indirizzo e
    topic; i widget si iscrivono a cio' che ascoltano.
 4. **Involucro su `L`** (il layout condiviso resta la fonte di verita',

@@ -14,6 +14,7 @@ function place(el,w){
   el.classList.toggle('hz',w.w>w.h);
 }
 function inner(w){
+  const t=widgetType(w.type);if(t?.inner)return t.inner(w);
   switch(w.type){
     case 'fader': case 'meter': return '<div class="trk"><div class="fill"></div></div>';
     case 'knob': return `<div class="knob"><svg viewBox="0 0 100 100" aria-hidden="true">
@@ -25,7 +26,6 @@ function inner(w){
     case 'fixgrid': return '<div class="fg"></div>';
     case 'cuestack': return '<div class="cs"></div>';
     case 'audiorigs': return '<div class="ar"></div>';
-    case 'laser': return '<div class="lz"></div>';
     case 'scenes':{
       if(w.mode==='dmx-enum')return '<div class="sc"></div>';
       if(w.mode==='head-presets')return `<div class="hp">${(w.headPresets||[]).map((p,i)=>`<button data-head-preset="${i}" title="${esc(p.name)}">${esc(p.name)}</button>`).join('')}<button data-act="manage-presets">＋ Gestisci</button></div>`;
@@ -55,13 +55,13 @@ function inner(w){
     default: return gInner(w);
   }
 }
-const noVal=new Set(['fixgrid','cuestack','audiorigs','laser','label','scenes','timeline','clock','stage','color','gaia','patchdeck','tddevice','gaiadmx']);
-const showVal=w=>w.type==='color'||(!noVal.has(w.type)&&!(w.type==='button'&&w.mode!=='toggle'));
+const noVal=new Set(['fixgrid','cuestack','audiorigs','label','scenes','timeline','clock','stage','color','gaia','patchdeck','tddevice','gaiadmx']);
+const showVal=w=>{const t=widgetType(w.type);if(t)return t.showsValue;return w.type==='color'||(!noVal.has(w.type)&&!(w.type==='button'&&w.mode!=='toggle'))};
 function build(w){
   const el=document.createElement('div');
   el.className='w t-'+w.type+(selId===w.id?' sel':''); el.dataset.id=w.id;
   el.style.setProperty('--c',w.color);
-  const addr=['label','stage','clock','fixgrid','cuestack','audiorigs','laser'].includes(w.type)||GAIA_TYPES.has(w.type)||(w.type==='scenes'&&w.mode==='dmx-enum')?'':(w.addr||'nessun indirizzo');
+  const t=widgetType(w.type),addr=(t?!t.showsAddr:['label','stage','clock','fixgrid','cuestack','audiorigs'].includes(w.type))||GAIA_TYPES.has(w.type)||(w.type==='scenes'&&w.mode==='dmx-enum')?'':(w.addr||'nessun indirizzo');
   el.innerHTML=`<div class="box">${inner(w)}<span class="lab">${esc(w.label)}</span><span class="addr">${esc(addr)}</span>${showVal(w)?'<span class="val"></span>':''}</div><span class="rs"></span>`;
   place(el,w); paint(el,w); bind(el,w);
   if(w.type==='stage'||w.type==='gaia')sizeCanvas(el);

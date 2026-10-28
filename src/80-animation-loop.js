@@ -34,6 +34,7 @@ function loop(){
   simTick(n);const gp=G.dirty||n-G.lastPaint>1000;if(gp){G.dirty=false;G.lastPaint=n}
   const byId=new Map(page().widgets.map(w=>[w.id,w]));
   for(const el of stage.children){const w=byId.get(el.dataset.id);if(!w)continue;
+    const t=widgetType(w.type);if(t){t.tick?.(el,w,{repaint:gp,now:n});continue}
     if(GAIA_TYPES.has(w.type)){if(gp)gPaint(el,w);if(w.type==='gaia')gOrb(el,n)}
     else if(w.type==='stage'){const c=el.querySelector('canvas'),g=c.getContext('2d');if(!c._d)continue;g.setTransform(c._d,0,0,c._d,0,0);
       const W=c.width/c._d,H=c.height/c._d;if(w.view==='plot')drawPlot(g,W,H,n,w);else drawRender(g,W,H,n,level);
@@ -75,7 +76,6 @@ function loop(){
     else if(w.type==='fixgrid'){if(gp)paintFixGrid(el,w)}
     else if(w.type==='cuestack'){if(gp)paintCueStack(el,w)}
     else if(w.type==='audiorigs'){if(gp)paintAudioRigs(el,w);updateAudioMeters(el)}
-    else if(w.type==='laser'){if(gp)paintLaser(el,w);animateLaserThumbs(el)}
     else if(w.type==='scenes'&&w.addr==='/dmx/scene'){const k=SH.fade>0?clamp((n-SH.t0)/(SH.fade*1000)):1;
       el.querySelectorAll('.si').forEach((x,i)=>{const p=x.querySelector('.prog');if(p)p.style.width=(i===SH.scene&&k<1)?k*100+'%':'0'})}
   }

@@ -29,7 +29,7 @@ test('app bundle preserves module order and parses as one client scope', () => {
 
   assert.equal(bundle.startsWith('(()=>{\n'), true);
   assert.equal(bundle.endsWith('\n})();\n'), true);
-  assert.equal(appModules.length, 34);
+  assert.equal(appModules.length, 35);
   assert.equal(positions.every(position => position >= 0), true);
   assert.deepEqual(positions, [...positions].sort((a, b) => a - b));
   assert.doesNotThrow(() => new vm.Script(bundle));
@@ -59,4 +59,15 @@ test('the app starts only from the last module, after every module has been eval
   assert.match(src('999-start.js'), /^init\(\);$/m);
   // nessuna chiamata di avvio a livello di modulo nel vecchio punto di partenza
   assert.doesNotMatch(src('90-settings-and-bootstrap.js'), /^migrateLegacyHeadSelectors\(\);/m);
+});
+
+test('registered widget types live only in their module, not in the old dispatch switches', () => {
+  const fs = require('node:fs'), path = require('node:path');
+  const dir = path.join(__dirname, '..', 'src');
+  const all = appModules.map(f => fs.readFileSync(path.join(dir, f), 'utf8')).join('\n');
+  const registered = [...all.matchAll(/registerWidget\('([^']+)'/g)].map(m => m[1]);
+  assert.ok(registered.includes('laser'));
+  const dispatch = ['00-core-state.js', '40-widget-rendering.js', '41-widget-interactions.js', '80-animation-loop.js', '95-help-tour.js'];
+  for (const type of registered) for (const f of dispatch)
+    assert.ok(!fs.readFileSync(path.join(dir, f), 'utf8').includes(`'${type}'`), `${type} compare ancora in ${f}`);
 });

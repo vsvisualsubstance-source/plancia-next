@@ -209,3 +209,10 @@ function laserFixtureStatus(f){
     `${laserStateText(c)} · sorgente ${(LZ_MODES.find(m=>m[0]===c.mode)||[])[1]||c.mode}${c.armed||c.mode==='off'?'':' · si arma qui o nella pagina Laser'}`;
   if(c){b.textContent=c.armed?'Disarma':'Arma';b.disabled=!c.armed&&(!c.online||c.mode==='off')}
 }
+
+/* ---------- tipo di widget: laser ---------- */
+registerWidget('laser',{size:[8,6],label:'Laser',showsValue:false,showsAddr:false,
+  inner:()=>'<div class="lz"></div>',
+  onPointer:laserDown,
+  tick:(el,w,{repaint})=>{if(repaint)paintLaser(el,w);animateLaserThumbs(el)},
+  help:w=>['Laser',w.h<=3?'BLACKOUT LASER disarma subito tutti i cubi; Arma/Armato per cubo (chiede conferma). Il resto nella pagina Laser.':'In alto le Scene laser: tocca una scena (template o SVG importato) per mandarla ai cubi scelti, ✎ per modificarla. Sotto, una scheda per LaserCube: sorgente (Test = cerchio di prova, Scene = scene del gateway, PatchDeck = contorni del video, Yolo = grafica su superficie, mai sulle persone), ARMA con conferma, Master e Intensità massima. In "Zona di sicurezza" il rettangolo dove il fascio può andare: fuori il gateway spegne il raggio. Se la sorgente si ferma il cubo va al buio da solo. BLACKOUT LASER disarma tutto.']});
