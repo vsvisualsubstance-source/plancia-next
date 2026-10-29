@@ -148,9 +148,16 @@ Problemi concreti visti lavorandoci:
      (23, uguali alla lista scritta a mano di prima); identica per il resto.
    - Il bus di 40 (`bus()` -> `model` + `timelineBus`) resta com'e': pochi
      ascoltatori fissi, nessun vantaggio a indicizzarlo.
-4. **Involucro su `L`** (il layout condiviso resta la fonte di verita',
-   sincronizzato a revisioni col bridge): notifica dei cambi e insieme dei
-   widget da ridisegnare; il loop disegna solo quelli.
+4. **Involucro su `L`** — MISURATO, NON SI FA (per ora). `npm run perf`
+   (`test/perf-ticks.js`, `--mqtt` aggiunge traffico come dal vivo:
+   `dmx_rigs` 30/s, livelli audio 10/s) misura per pagina il tempo dei `tick`
+   per fotogramma. Su OPS, con traffico: massimo 1,4 ms su 16,7 (Regia), di
+   cui 1,3 il Render del palco, che ridisegna a ogni fotogramma per scelta;
+   i widget che si ridisegnano su `G.dirty` (Gaia, PatchDeck, console, rig
+   audio, laser) stanno sotto 0,2 ms in tutto, anche quando il traffico li fa
+   ridisegnare al 60% dei fotogrammi. Un involucro su `L` con insieme dei
+   widget sporchi aggiungerebbe complessita' senza un guadagno misurabile.
+   Da riprendere solo se la misura su un tablet lento dice il contrario.
 5. **Stato effettivo reale/simulato**: un solo selettore per fixture
    ("reale se fresco, altrimenti simulato"), usato da Render e widget, con
    test.
