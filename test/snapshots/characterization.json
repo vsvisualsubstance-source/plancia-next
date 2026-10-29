@@ -3300,6 +3300,42 @@
    }
   }
  },
+ "render": {
+  "fixtures": 27,
+  "types": [
+   "bar",
+   "blinder",
+   "haze",
+   "mh",
+   "par",
+   "speaker",
+   "wall"
+  ],
+  "simulated": {
+   "hash": "c2a60330",
+   "mean": [
+    41.09,
+    26.67,
+    32.74
+   ]
+  },
+  "real": {
+   "hash": "21c17a27",
+   "mean": [
+    33.72,
+    30.89,
+    37.62
+   ]
+  },
+  "mixed": {
+   "hash": "d28a50d0",
+   "mean": [
+    36.09,
+    28.9,
+    36.41
+   ]
+  }
+ },
  "layout": {
   "idempotentOnReload": true,
   "pages": 13

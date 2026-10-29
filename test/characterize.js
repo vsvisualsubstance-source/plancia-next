@@ -14,6 +14,7 @@
 //   templates   pagine e widget di ogni template (tipo, posizione, indirizzo, modo)
 //   migrations  un layout di vecchio formato passato per tutta la catena uiRev
 //   incoming    OSC e MQTT in arrivo: valori dei widget e stato che cambiano
+//   render      Render del palco a stato fisso: simulato, reale, misto (impronta dei pixel)
 //   layout      il layout dei dati veri: identico dopo un ricaricamento (idempotente)
 
 const assert = require('assert');
@@ -112,6 +113,39 @@ const PAGE_INCOMING = `(()=>{const T=window.__planciaTest,W=T.W,P=T.P,saved=T.L;
     output:{master:T.DMX_OUTPUT.master,scene:T.DMX_OUTPUT.scene,device:T.DMX_OUTPUT.deviceId,fx:strip(T.DMX_OUTPUT.fixtures.get('zz-1'))}};
   return{osc,sh,fixture:fx?{intensity:fx.intensity}:null,mqtt:mq}})()`;
 
+// Render del palco su un canvas fuori schermo, con stato fisso: solo
+// simulazione, tutte le fixture con uscita reale di DMX Master, e meta' e meta'.
+// Si registra un'impronta dei pixel (e il colore medio, per capire cosa cambia).
+const PAGE_RENDER = `(()=>{const T=window.__planciaTest,SH=T.SH,O=T.DMX_OUTPUT,L=T.L,saved=L.fixtures;
+  // il layout vero non ha blinder ne' nebbia: due in piu', solo per la foto
+  L.fixtures=[...(saved||[]),{uid:'zz-bl',id:901,type:'blinder',x:-2,y:7,z:1.5},{uid:'zz-hz',id:902,type:'haze',x:3,y:1,z:0}];
+  const fx=L.fixtures.filter(f=>f.enabled!==false);
+  const keep=JSON.stringify({master:SH.master,blackout:SH.blackout,strobe:SH.strobe,chase:SH.chase,g:SH.g,led:SH.led}),
+    tc=[SH.wash,SH.back,SH.bar,SH.wall,...SH.heads.map(h=>h.T)].map(t=>t.c.slice()),hs=SH.heads.map(h=>[h.gobo,h.strobe]);
+  const out={source:O.source,lastAt:O.lastAt,fixtures:O.fixtures};
+  Object.assign(SH,{master:1,blackout:0,strobe:0,chase:0,g:{front:.85,back:.9,mh:1,ledbar:.8,ledwall:.9,haze:.55,blinder:.3},led:{mode:2,bright:.9}});
+  SH.wash.c=[1,.4,.1];SH.back.c=[.2,.3,1];SH.bar.c=[.9,.1,.6];SH.wall.c=[.1,.9,.7];
+  T.ensureHeadPool(fx.filter(f=>f.type==='mh').length);
+  SH.heads.forEach((h,i)=>{h.T.c=[(i%5)/5-.4,.3+(i%3)*.2,1,.5,.2,.9,.4,.6];h.gobo=i%3;h.strobe=0});
+  const shot=()=>{const c=document.createElement('canvas');c.width=480;c.height=270;const g=c.getContext('2d');
+    T.drawRender(g,480,270,12345,.5);const d=g.getImageData(0,0,480,270).data;let h=2166136261,r=0,gg=0,b=0;
+    for(let i=0;i<d.length;i++){h=Math.imul(h^d[i],16777619)>>>0}
+    for(let i=0;i<d.length;i+=4){r+=d[i];gg+=d[i+1];b+=d[i+2]}const n=d.length/4;
+    return{hash:h.toString(16),mean:[r/n,gg/n,b/n].map(v=>+v.toFixed(2))}};
+  const real=(f,i)=>({key:String(f.uid??f.id),uid:String(f.uid??f.id),id:f.id??null,sent:i%4!==3,intensity:.3+(i%4)*.2,
+    rgbOut:i%5===4?null:[(i%3)/2,.5,1-(i%3)/2],pan:f.type==='mh'?-90+i*20:null,tilt:f.type==='mh'?(i%2?40:-30):null,
+    zoom:f.type==='mh'?.3:null,focus:f.type==='mh'?.7:null,gobo:null,colorWheel:null,shutter:null,colorSource:i%7===6?'unknown':null,receivedAt:Date.now()});
+  const res={fixtures:fx.length,types:[...new Set(fx.map(f=>f.type))].sort()};
+  try{
+    O.source='unknown';O.lastAt=0;O.fixtures=new Map();res.simulated=shot();
+    O.source='mqtt';O.lastAt=Date.now();O.fixtures=new Map(fx.map((f,i)=>[String(f.uid??f.id),real(f,i)]));res.real=shot();
+    O.fixtures=new Map(fx.filter((f,i)=>i%2).map((f,i)=>[String(f.uid??f.id),real(f,i)]));res.mixed=shot();
+  }finally{
+    Object.assign(SH,JSON.parse(keep));[SH.wash,SH.back,SH.bar,SH.wall,...SH.heads.map(h=>h.T)].forEach((t,i)=>{if(tc[i])t.c=tc[i]});
+    SH.heads.forEach((h,i)=>{if(hs[i])[h.gobo,h.strobe]=hs[i]});Object.assign(O,out);L.fixtures=saved;
+  }
+  return res})()`;
+
 function summarizeLayout(L) {
   return JSON.stringify(L);
 }
@@ -137,6 +171,7 @@ async function main() {
       templates: await p.ev(PAGE_TEMPLATES),
       migrations: await p.ev(PAGE_MIGRATIONS),
       incoming: await p.ev(PAGE_INCOMING),
+      render: await p.ev(PAGE_RENDER),
     };
     await p.reload();
     const layoutAfter = summarizeLayout(await p.ev('window.__planciaTest.L'));
