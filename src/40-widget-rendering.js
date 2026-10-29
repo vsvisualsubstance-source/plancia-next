@@ -52,7 +52,7 @@ function renderTabs(){
     b.onclick=()=>{pi=i;selId=null;render()};t.appendChild(b)});
   if(editing){const b=document.createElement('button');b.className='tab add';b.textContent='+';b.title='Nuova pagina';b.onclick=addPage;t.appendChild(b)}
 }
-function render(){document.body.classList.toggle('editing',editing);$('#addbar').hidden=!editing;
+function render(){oscIndexStale();document.body.classList.toggle('editing',editing);$('#addbar').hidden=!editing;
   $('#editBtn').textContent=editing?'Fine griglia':'Modifica griglia';
   $('#editBtn').title=editing?'Termina la modifica della griglia dei widget. Le fixture del palco si modificano direttamente nella Pianta.':'Modifica solo la griglia dei widget; per spostare o aggiungere luci usa direttamente la Pianta.';
   $('#editBtn').classList.toggle('primary',editing);

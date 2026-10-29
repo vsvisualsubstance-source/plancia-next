@@ -15,6 +15,8 @@
 //     tick:(el,w,{repaint,now,level})=>…,   // a ogni fotogramma; repaint = dati cambiati o 1 s,
 //                                           // level = pulsazione dello show (per il Render)
 //     help:w=>[titolo,testo],               // passo della visita guidata "?"
+//     receive:(w,args)=>bool,               // OSC in arrivo sul suo indirizzo: aggiorna il valore,
+//                                           // true = da ridisegnare (senza: il tipo non ascolta)
 //     refreshOnResize:true,                 // ricostruito quando lo si ridimensiona in Modifica griglia
 //     oscAddress:true, addrLabel:'…',       // indirizzo OSC modificabile nell'ispettore (anche w=>bool)
 //     range:true|{min,max}, midi:true,      // campi min/max (con etichette) e MIDI CC nell'ispettore
@@ -29,3 +31,21 @@ function registerWidget(type,spec){
   if(spec.label)NAMES[type]=spec.label;
 }
 function widgetType(type){return WIDGET_TYPES.get(type)||null}
+// valore OSC -> 0..1 nel range del widget
+const oscNorm=(w,a)=>clamp((+a-w.min)/((w.max-w.min)||1));
+
+// Indice indirizzo OSC -> widget che lo ascoltano (tipi con receive), in ordine
+// di pagina. Si ricostruisce alla prima ricezione dopo un cambio del layout:
+// save() e render() lo invalidano, un layout nuovo (L sostituito) pure.
+let oscIndex=null;
+function oscIndexStale(){oscIndex=null}
+function oscListeners(address){
+  if(!oscIndex||oscIndex.L!==L){
+    oscIndex={L,map:new Map()};
+    for(const p of L.pages)for(const w of p.widgets){
+      if(!w.addr||!widgetType(w.type)?.receive)continue;
+      const list=oscIndex.map.get(w.addr);if(list)list.push([p,w]);else oscIndex.map.set(w.addr,[[p,w]]);
+    }
+  }
+  return oscIndex.map.get(address)||[];
+}

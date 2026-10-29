@@ -16,7 +16,10 @@ function paintTrack(el,w){
 }
 const ignorePointer=()=>{};
 
-registerWidget('fader',{range:true,midi:true,size:[2,5],label:'Fader',
+// fader, manopola e indicatore: il primo argomento nel range
+const receiveLevel=(w,args)=>{if(!args.length)return false;w.value=oscNorm(w,args[0]);return true};
+
+registerWidget('fader',{range:true,midi:true,size:[2,5],label:'Fader',receive:receiveLevel,
   inner:()=>TRACK_HTML,paint:paintTrack,
   onPointer(e,el,w){
     const end=startDrag(el,e),r=el.querySelector('.box').getBoundingClientRect();
@@ -32,12 +35,12 @@ registerWidget('fader',{range:true,midi:true,size:[2,5],label:'Fader',
     return[w.label||'Fader',`Trascina su e giù (${a||'nessun indirizzo'}).`];
   }});
 
-registerWidget('meter',{range:true,
+registerWidget('meter',{range:true,receive:receiveLevel,
   inspector:{footer:()=>'<p class="hint">L\'indicatore riceve soltanto: si muove quando arriva OSC su questo indirizzo.</p>'},
   size:[1,5],label:'Indicatore',
   inner:()=>TRACK_HTML,paint:paintTrack,onPointer:ignorePointer});
 
-registerWidget('knob',{range:true,midi:true,size:[2,2],label:'Manopola',
+registerWidget('knob',{range:true,midi:true,size:[2,2],label:'Manopola',receive:receiveLevel,
   inner:()=>`<div class="knob"><svg viewBox="0 0 100 100" aria-hidden="true">
       <path class="tr" d="M23.13 76.87A38 38 0 1 1 76.87 76.87" pathLength="100"/>
       <path class="vl" d="M23.13 76.87A38 38 0 1 1 76.87 76.87" pathLength="100"/>
@@ -55,6 +58,7 @@ registerWidget('knob',{range:true,midi:true,size:[2,2],label:'Manopola',
   }});
 
 registerWidget('xy',{range:true,size:[4,4],label:'Pad XY',
+  receive:(w,args)=>{if(args.length>1){w.value=oscNorm(w,args[0]);w.valueY=oscNorm(w,args[1])}return true},
   inner:()=>'<div class="pad"><i class="hx"></i><i class="vy"></i><i class="dot"></i></div>',
   paint(el,w){
     const X=w.value*100+'%',Y=(1-w.valueY)*100+'%',d=el.querySelector('.dot');
@@ -71,6 +75,7 @@ registerWidget('xy',{range:true,size:[4,4],label:'Pad XY',
   help:()=>['Pan / Tilt','Trascina per puntare le teste selezionate.']});
 
 registerWidget('button',{oscAddress:true,range:{min:'Valore OFF',max:'Valore ON'},midi:true,
+  receive:(w,[a])=>{w.value=(+a===w.max||+a>(w.min+w.max)/2)?1:0;return true},
   inspector:{html:w=>`<label>Comportamento<select id="fMode"><option value="push">Momentaneo</option><option value="toggle">Interruttore</option></select></label>`,
     bind:(w,{on,val})=>{val('#fMode',w.mode);on('#fMode',v=>{w.mode=v;w.value=0},'change')}},
   size:[2,2],label:'Pulsante',
@@ -95,6 +100,7 @@ registerWidget('button',{oscAddress:true,range:{min:'Valore OFF',max:'Valore ON'
   }});
 
 registerWidget('color',{size:[4,4],label:'Colore',
+  receive:(w,args)=>{if(args.length>2){const[h,s]=rgb2hsv(+args[0],+args[1],+args[2]);w.value={h,s}}return true},
   inner:()=>`<div class="cw"><div class="disc"><i class="mk"></i></div><div class="sws">${SWC.map((c,i)=>`<i data-s="${i}" style="--s:${hex(c)}"></i>`).join('')}</div></div>`,
   paint(el,w){
     const h=w.value?.h??0,s=w.value?.s??0,mk=el.querySelector('.mk');

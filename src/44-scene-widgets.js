@@ -5,6 +5,12 @@
 // enum di DMX Master, nessun indirizzo OSC). Con addr '/dmx/scene' mostra le
 // scene vere di DMX Master. Prima era negli switch di 40, 41, 80 e 95.
 registerWidget('scenes',{oscAddress:w=>!['dmx-enum','head-presets'].includes(w.mode),
+  // OSC in arrivo: teste selezionate (dal selettore delle teste), voci accese o voce attiva
+  receive(w,args){
+    if(w.mode==='head-select'&&w.addr==='/mh/select/heads'){
+      w.selectedHeads=args.map(String);w.value=(w.headValues||[]).map(id=>w.selectedHeads.includes(id)?1:0);
+    }else w.value=w.mode==='multi'?args.map(x=>+x>.5?1:0):Math.round(+args[0]);
+    return true},
   inspector:{html(w){const availableEnums=enumParams(w.device||pickDev(w,'dmx')||'');
       return `${!['dmx-enum','head-presets'].includes(w.mode)?'<label>Voci (una per riga)<textarea id="fItems"'+(w.mode==='head-select'?' disabled':'')+'></textarea></label>':''}<div class="two"><label>Modalità<select id="fSMode"><option value="push">Una attiva</option><option value="multi">Selezione multipla</option><option value="head-select">Selezione teste TD</option><option value="dmx-enum">Parametro enum DMX V8</option><option value="head-presets">Preset PTZ salvati</option></select></label><label>Colonne<input id="fCols" type="number" min="0" max="12" placeholder="auto"></label></div>
       ${w.mode==='dmx-enum'?`<label>Device DMX V8<select id="fTdDevice"><option value="">Automatico</option>${devIds('dmx').map(id=>`<option value="${esc(id)}"${id===w.device?' selected':''}>${esc(id)}</option>`).join('')}</select></label>

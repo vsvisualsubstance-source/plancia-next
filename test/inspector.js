@@ -42,6 +42,14 @@ const EDITS = [
       assert.ok(check(w, L), `${key}: ${field} = ${value} non arriva al widget`);
       console.log(`ok     ${key.padEnd(12)} ${field} = ${value}`);
     }
+    // l'ultimo widget toccato e' il fader: cambio d'indirizzo dall'ispettore,
+    // l'OSC in arrivo sul nuovo indirizzo deve trovarlo (indice per indirizzo)
+    await p.ev(`window.__planciaTest.receive({type:'osc',address:'/zz/prima',args:[0]});1`); // indice gia' costruito
+    await p.ev(`(()=>{const n=document.querySelector('#insp #fAddr');n.value='/zz/nuovo';n.dispatchEvent(new Event('input',{bubbles:true}));return 1})()`);
+    const moved = await p.ev(`(()=>{const T=window.__planciaTest,w=T.L.pages.flatMap(p=>p.widgets).find(w=>w.addr==='/zz/nuovo');
+      T.receive({type:'osc',address:'/zz/nuovo',args:[w.min+(w.max-w.min)/4]});return w.value})()`);
+    assert.equal(moved, 0.25, 'OSC sul nuovo indirizzo non arriva al fader');
+    console.log('ok     fader        OSC in arrivo sul nuovo indirizzo');
     assert.deepEqual(p.problems, []);
     console.log(`ispettore: ${EDITS.length} modifiche arrivate ai widget`);
   } finally { p.close(); }
