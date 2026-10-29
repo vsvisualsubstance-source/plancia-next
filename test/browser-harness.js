@@ -46,8 +46,12 @@ function copyTree(from, to) {
   }
 }
 
-// state: file di stato da copiare (default data/state.json se c'e'; null = layout di default)
-async function startPlancia({ hooks = false, state = path.join(ROOT, 'data', 'state.json') } = {}) {
+// state: file di stato da copiare. Default: il layout fisso di test/fixtures
+// (cosi' i riferimenti non dipendono da data/, che cambia a ogni prova e non e'
+// nel repo); PLANCIA_STATE=percorso per provare un altro layout; null = layout
+// di default della Plancia.
+const FIXTURE_STATE = path.join(__dirname, 'fixtures', 'state.json');
+async function startPlancia({ hooks = false, state = process.env.PLANCIA_STATE || FIXTURE_STATE } = {}) {
   const browser = BROWSERS.find(p => fs.existsSync(p));
   if (!browser) throw new Error('nessun browser Chromium/Edge trovato (SMOKE_BROWSER=...)');
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'plancia-smoke-'));
