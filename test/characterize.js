@@ -13,6 +13,7 @@
 //   messages    messaggi davvero spediti al bridge da set/setXY/fire (OSC, canale, MIDI)
 //   templates   pagine e widget di ogni template (tipo, posizione, indirizzo, modo)
 //   migrations  un layout di vecchio formato passato per tutta la catena uiRev
+//   incoming    OSC e MQTT in arrivo: valori dei widget e stato che cambiano
 //   layout      il layout dei dati veri: identico dopo un ricaricamento (idempotente)
 
 const assert = require('assert');
@@ -70,6 +71,44 @@ const PAGE_MIGRATIONS = `(()=>{const T=window.__planciaTest,W=T.W,P=T.P,saved=T.
     laserScenes:(L.laserScenes||[]).map(s=>s.id)};
   T.L=saved;return res})()`;
 
+// messaggi IN ARRIVO: OSC dal bridge (receive) su un layout di prova, e MQTT
+// (gIn) per ogni famiglia di topic; si fotografa cio' che cambia. Solo device
+// e testi di prova: la simulazione di Gaia gira in sottofondo.
+const PAGE_INCOMING = `(()=>{const T=window.__planciaTest,W=T.W,P=T.P,saved=T.L;
+  const ws=[W('fader',0,0,1,4,{addr:'/in/f',min:0,max:255}),W('fader',0,0,1,4,{addr:'/in/f',min:0,max:255,oscChannel:'dmx'}),
+    W('knob',0,0,2,2,{addr:'/in/k',min:-1,max:1}),W('meter',0,0,1,4,{addr:'/in/m',min:0,max:1}),
+    W('xy',0,0,4,4,{addr:'/in/xy',min:-1,max:1}),W('button',0,0,2,2,{addr:'/in/b',min:0,max:1}),
+    W('button',0,0,2,2,{addr:'/in/bt',min:0,max:255,mode:'toggle'}),W('scenes',0,0,4,2,{addr:'/in/s',items:'A\\nB\\nC'}),
+    W('scenes',0,0,4,2,{addr:'/in/sm',mode:'multi',items:'A\\nB\\nC'}),
+    W('scenes',0,0,4,2,{addr:'/mh/select/heads',mode:'head-select',headValues:['h1','h2','h3']}),
+    W('color',0,0,2,2,{addr:'/in/c'}),W('label',0,0,2,1,{addr:'/in/l',label:'L'}),W('fader',0,0,1,4,{addr:'/in/f2',min:0,max:1})];
+  T.L={...saved,pages:[P('vuota',[]),P('prova',ws)]};
+  const msgs=[['/in/f',[127.5]],['/in/f',[255],'dmx'],['/in/k',[0.5]],['/in/m',[0.25]],['/in/xy',[0.5]],['/in/xy',[0.5,-0.5]],
+    ['/in/b',[1]],['/in/bt',[200]],['/in/s',[2]],['/in/sm',[1,0,1]],['/mh/select/heads',['h2','h3']],['/in/c',[1,0,0]],
+    ['/in/c',[0.5]],['/in/l',[3]],['/in/f2',[]],['/nessuno',[1]],['/dmx/master',[0.4]],['/dmx/fixture/id3',[0.8]]];
+  const osc=[];
+  for(const[address,args,channel]of msgs){T.receive({type:'osc',address,args,...(channel?{channel}:{})});
+    osc.push([address,channel||'',ws.map(w=>JSON.stringify([w.value,w.valueY,w.selectedHeads]))])}
+  const sh={master:T.SH.master},fx=T.DMX_OUTPUT.fixtures.get('id3');
+  T.L=saved;
+  const mqtt=[['gaia/device/zz-td/status',{device_id:'zz-td',params:{a:{v:1}},ts:1}],
+    ['gaia/devices/zz-td/dmx_patch',{rev:2,params:{b:{v:2}}}],['gaia/devices/zz-td/dmx_patch',{rev:2,params:{b:{v:9}}}],
+    ['gaia/devices/zz-pd/patchdeck_matrix',{device_id:'zz-pd',patches:[1,2]}],['gaia/devices/zz-pd/patch_thumb/4',{patch:4,label:'P4',data:'QUJD'}],
+    ['gaia/devices/zz-dx/dmx_matrix',{device_id:'zz-dx',heads:[]}],['gaia/device/zz-ctl/audio_levels',{rms:0.5}],
+    ['gaia/dmx/zz-sala/status',{stanza:'zz-sala',on:1}],['gaia/td/canvas',{zz:1}],['gaia/brain/state',{zz:2}],['gaia/brain/dream','zz sogno'],
+    ['gaia/voice/tts/zz-sala','zz ciao'],['gaia/voice/command/zz-sala',{text:'zz luce',stanza:'zz-sala'}],
+    ['gaia/devices/zz-laser/laser_preview',{cubes:{c1:[[0,0]]}}],['gaia/devices/zz-dmx/show_timeline',{rev:9,cues:[]}],
+    ['gaia/devices/zz-dmx/dmx_rigs',{rigs:{zz_rig:{level:0.7,kicks:3}}}],
+    ['gaia/devices/zz-dmx/dmx_output',{v:1,device_id:'zz-dmx',seq:4,master:0.6,blackout:false,strobe:false,scene:{index:1},fixtures:[{uid:'zz-1',id:91,sent:true,intensity:0.5}]}]];
+  for(const[t,p]of mqtt)T.gIn(t,p);
+  const G=T.G,strip=o=>JSON.parse(JSON.stringify(o??null,(k,v)=>['at','_seen','ts','receivedAt'].includes(k)?undefined:v));
+  const mq={device:strip(G.devices['zz-td']),tdState:strip(G.tdState['zz-td']),pdm:strip(G.pdm['zz-pd']),thumb:strip(G.pdThumb['zz-pd']),
+    dxm:strip(G.dxm['zz-dx']),levels:strip(G.levels['zz-ctl']),dmx:strip(G.dmx['zz-sala']),canvas:strip(G.canvas),brain:strip(G.brain),dream:G.dream,
+    chat:G.chat.filter(c=>/^zz/.test(c.text)).map(c=>[c.who,c.text,c.room]),laser:strip(G.laserPreview?.cubes),
+    tdTimeline:G.tdTimeline?.rev===9?'zz-dmx ignorato?':'ok',rig:strip(T.DMX_OUTPUT.rigs.zz_rig),
+    output:{master:T.DMX_OUTPUT.master,scene:T.DMX_OUTPUT.scene,device:T.DMX_OUTPUT.deviceId,fx:strip(T.DMX_OUTPUT.fixtures.get('zz-1'))}};
+  return{osc,sh,fixture:fx?{intensity:fx.intensity}:null,mqtt:mq}})()`;
+
 function summarizeLayout(L) {
   return JSON.stringify(L);
 }
@@ -94,6 +133,7 @@ async function main() {
       messages: await p.ev(PAGE_MESSAGES),
       templates: await p.ev(PAGE_TEMPLATES),
       migrations: await p.ev(PAGE_MIGRATIONS),
+      incoming: await p.ev(PAGE_INCOMING),
     };
     await p.reload();
     const layoutAfter = summarizeLayout(await p.ev('window.__planciaTest.L'));
