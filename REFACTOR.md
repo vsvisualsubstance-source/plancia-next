@@ -128,8 +128,18 @@ Problemi concreti visti lavorandoci:
      l'ispettore (22 varianti, HTML e valori): identico dopo. `test/inspector.js`
      modifica un campo per tipo e controlla che arrivi al widget (verificato
      che scatta).
-3. **Bus dei messaggi**: OSC e MQTT in arrivo indicizzati per indirizzo e
-   topic; i widget si iscrivono a cio' che ascoltano.
+3. **Bus dei messaggi** — IN CORSO. Prima la caratterizzazione ha fotografato
+   i messaggi in arrivo (`incoming`: OSC su un layout di prova con ogni tipo
+   che riceve, MQTT per ogni famiglia di topic).
+   - OSC: FATTO. Ogni tipo che ascolta dichiara `receive(w,args)` nel registro
+     (fader, knob, meter, xy, button, color, scenes); `applyWidgets` non
+     scorre piu' tutti i widget di tutte le pagine ma un indice indirizzo ->
+     widget (`oscListeners` in 05), invalidato da `save()`, `render()` e dal
+     cambio di `L`. Caratterizzazione identica; `test/inspector.js` cambia
+     l'indirizzo di un fader dall'ispettore e controlla che l'OSC sul nuovo
+     indirizzo lo trovi (verificato che scatta senza invalidazione).
+   - MQTT: un router per topic (`onMqtt(pattern, fn)`) al posto della catena
+     di `if` in `gIn`, con le iscrizioni ricavate dai pattern registrati.
 4. **Involucro su `L`** (il layout condiviso resta la fonte di verita',
    sincronizzato a revisioni col bridge): notifica dei cambi e insieme dei
    widget da ridisegnare; il loop disegna solo quelli.
