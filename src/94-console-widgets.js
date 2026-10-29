@@ -8,7 +8,7 @@ const FG_FILTER=new Map(); // id widget -> gruppo mostrato ('' = tutte)
 const fgSel=w=>{if(!FG_SEL.has(w.id))FG_SEL.set(w.id,new Set());return FG_SEL.get(w.id)};
 const fgFixtures=w=>{const g=FG_FILTER.get(w.id)||'';return(L.fixtures||[]).filter(f=>FIX_TYPES[f.type]?.ch&&(!g||f.group===g))};
 function fgTileColor(f){
-  const fb=dmxOutputFresh()?dmxOutputForFixture(f):null;
+  const fb=fixtureOutput(f)?.record;
   if(fb?.rgbOut&&Math.max(...fb.rgbOut)>0){const m=Math.max(...fb.rgbOut);return{c:dmxHex(fb.rgbOut.map(v=>v/m)),k:fb.sent?Math.max(.25,m):.15}}
   if(fb&&fb.sent&&fb.intensity!=null)return{c:'#ffe9c4',k:Math.max(.15,fb.intensity)};
   return{c:'#3a404b',k:1};

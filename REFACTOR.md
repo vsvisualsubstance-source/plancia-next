@@ -158,9 +158,23 @@ Problemi concreti visti lavorandoci:
    ridisegnare al 60% dei fotogrammi. Un involucro su `L` con insieme dei
    widget sporchi aggiungerebbe complessita' senza un guadagno misurabile.
    Da riprendere solo se la misura su un tablet lento dice il contrario.
-5. **Stato effettivo reale/simulato**: un solo selettore per fixture
-   ("reale se fresco, altrimenti simulato"), usato da Render e widget, con
-   test.
+5. **Stato effettivo reale/simulato** — FATTO. Prima la caratterizzazione
+   ha fotografato il Render del palco su un canvas fuori schermo a stato fisso
+   (impronta dei pixel e colore medio) in tre casi: solo simulazione, uscita
+   reale di DMX Master per tutte le fixture, meta' e meta'; con blinder e
+   nebbia aggiunti per la foto (il layout vero non li ha). Verificato che un
+   livello reale dimezzato da' differenze.
+   - `fixtureOutput(f,{at,model})` in `49-dmx-output.js`: `null` se DMX Master
+     non e' fresco o non conosce la fixture (vale la simulazione), altrimenti
+     `{record, color, level, angles}`. Sostituisce `feedbackFor`,
+     `outputColor`, `outputLevel` e le chiamate sparse a `dmxHeadAngles` nel
+     Render (wall, uplight, teste, barre, blinder, nebbia) e la scelta nella
+     griglia Luci (94). Test unitari in `test/dmx-output.test.js` (fresco o
+     scaduto, inviata o no, solo intensity, buio, fixture sconosciuta, angoli
+     col modello). Render identico al pixel nei tre casi.
+   - Restano su `dmxOutputFresh()` le scelte che non sono per fixture: tinta
+     di un gruppo per le palette (70), livelli dei rig audio (96), testo della
+     scena nella riga di stato del Palco (61).
 6. Solo se serve ancora: ES modules per cartella (`state/`, `widgets/`,
    `stage/`, `io/`, `engine/`, `gaia/`, `ui/`), con la build che li unisce.
 
