@@ -99,6 +99,7 @@ const PAGE_INCOMING = `(()=>{const T=window.__planciaTest,W=T.W,P=T.P,saved=T.L;
     ['gaia/voice/tts/zz-sala','zz ciao'],['gaia/voice/command/zz-sala',{text:'zz luce',stanza:'zz-sala'}],
     ['gaia/devices/zz-laser/laser_preview',{cubes:{c1:[[0,0]]}}],['gaia/devices/zz-dmx/show_timeline',{rev:9,cues:[]}],
     ['gaia/devices/zz-dmx/dmx_rigs',{rigs:{zz_rig:{level:0.7,kicks:3}}}],
+    ['gaia/show/clock/state',{v:1,master:'td-dmx-win',pos:12.5,playing:true,length:300}],
     ['gaia/devices/zz-dmx/dmx_output',{v:1,device_id:'zz-dmx',seq:4,master:0.6,blackout:false,strobe:false,scene:{index:1},fixtures:[{uid:'zz-1',id:91,sent:true,intensity:0.5}]}]];
   for(const[t,p]of mqtt)T.gIn(t,p);
   const G=T.G,strip=o=>JSON.parse(JSON.stringify(o??null,(k,v)=>['at','_seen','ts','receivedAt'].includes(k)?undefined:v));
@@ -106,6 +107,8 @@ const PAGE_INCOMING = `(()=>{const T=window.__planciaTest,W=T.W,P=T.P,saved=T.L;
     dxm:strip(G.dxm['zz-dx']),levels:strip(G.levels['zz-ctl']),dmx:strip(G.dmx['zz-sala']),canvas:strip(G.canvas),brain:strip(G.brain),dream:G.dream,
     chat:G.chat.filter(c=>/^zz/.test(c.text)).map(c=>[c.who,c.text,c.room]),laser:strip(G.laserPreview?.cubes),
     tdTimeline:G.tdTimeline?.rev===9?'zz-dmx ignorato?':'ok',rig:strip(T.DMX_OUTPUT.rigs.zz_rig),
+    clock:{pos:T.showClock.state?.pos,playing:T.showClock.state?.playing,authority:T.showClock.authority},
+    topics:T.mqttTopics().slice().sort(),
     output:{master:T.DMX_OUTPUT.master,scene:T.DMX_OUTPUT.scene,device:T.DMX_OUTPUT.deviceId,fx:strip(T.DMX_OUTPUT.fixtures.get('zz-1'))}};
   return{osc,sh,fixture:fx?{intensity:fx.intensity}:null,mqtt:mq}})()`;
 

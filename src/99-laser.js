@@ -164,6 +164,8 @@ function laserCubeState(cid){
   const d=G.devices?.[lzDevId()];
   return d&&!d.offline&&d.laser?(d.laser.cubes||[]).find(c=>c.id===cid)||null:null;
 }
+// laser gateway: cio' che i cubi proiettano davvero, per il Render (~6/s, solo in uscita)
+onMqtt('gaia/devices/+/laser_preview',(p,seg,obj)=>{if(obj&&p.cubes)G.laserPreview={at:Date.now(),cubes:p.cubes}});
 function laserPreviewPts(cid){
   const p=G.laserPreview;
   return p&&Date.now()-p.at<1200?p.cubes?.[cid]||null:null;

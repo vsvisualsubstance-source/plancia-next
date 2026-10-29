@@ -128,7 +128,7 @@ Problemi concreti visti lavorandoci:
      l'ispettore (22 varianti, HTML e valori): identico dopo. `test/inspector.js`
      modifica un campo per tipo e controlla che arrivi al widget (verificato
      che scatta).
-3. **Bus dei messaggi** — IN CORSO. Prima la caratterizzazione ha fotografato
+3. **Bus dei messaggi** — FATTO. Prima la caratterizzazione ha fotografato
    i messaggi in arrivo (`incoming`: OSC su un layout di prova con ogni tipo
    che riceve, MQTT per ogni famiglia di topic).
    - OSC: FATTO. Ogni tipo che ascolta dichiara `receive(w,args)` nel registro
@@ -138,8 +138,16 @@ Problemi concreti visti lavorandoci:
      cambio di `L`. Caratterizzazione identica; `test/inspector.js` cambia
      l'indirizzo di un fader dall'ispettore e controlla che l'OSC sul nuovo
      indirizzo lo trovi (verificato che scatta senza invalidazione).
-   - MQTT: un router per topic (`onMqtt(pattern, fn)`) al posto della catena
-     di `if` in `gIn`, con le iscrizioni ricavate dai pattern registrati.
+   - MQTT: FATTO. `src/06-message-bus.js`: `onMqtt(pattern, fn)` con `+`/`#`,
+     `gIn` sceglie il primo pattern che corrisponde (un gestore che
+     restituisce false non chiede di ridisegnare), le iscrizioni al broker
+     sono `mqttTopics()`: un topic nuovo si aggiunge in un posto solo. I
+     gestori stanno accanto al codice che usano: orologio dello show in 30,
+     anteprima dei cubi in 99-laser, il resto in fondo a 70. La
+     caratterizzazione fotografa ora anche l'orologio e l'elenco dei topic
+     (23, uguali alla lista scritta a mano di prima); identica per il resto.
+   - Il bus di 40 (`bus()` -> `model` + `timelineBus`) resta com'e': pochi
+     ascoltatori fissi, nessun vantaggio a indicizzarlo.
 4. **Involucro su `L`** (il layout condiviso resta la fonte di verita',
    sincronizzato a revisioni col bridge): notifica dei cambi e insieme dei
    widget da ridisegnare; il loop disegna solo quelli.

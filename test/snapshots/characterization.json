@@ -3242,6 +3242,36 @@
     "kickEnable": null,
     "kickAt": 0
    },
+   "clock": {
+    "pos": 12.5,
+    "playing": true,
+    "authority": true
+   },
+   "topics": [
+    "gaia/brain/dream",
+    "gaia/brain/state",
+    "gaia/device/+/audio_levels",
+    "gaia/device/+/status",
+    "gaia/devices/+/dmx_catalog",
+    "gaia/devices/+/dmx_layout",
+    "gaia/devices/+/dmx_live",
+    "gaia/devices/+/dmx_matrix",
+    "gaia/devices/+/dmx_output",
+    "gaia/devices/+/dmx_patch",
+    "gaia/devices/+/dmx_rigs",
+    "gaia/devices/+/heads_state",
+    "gaia/devices/+/laser_preview",
+    "gaia/devices/+/patch_thumb/+",
+    "gaia/devices/+/patchdeck_matrix",
+    "gaia/devices/+/show_scenes",
+    "gaia/devices/+/show_timeline",
+    "gaia/dmx/+/status",
+    "gaia/show/clock/pong/+",
+    "gaia/show/clock/state",
+    "gaia/td/canvas",
+    "gaia/voice/command/+",
+    "gaia/voice/tts/+"
+   ],
    "output": {
     "master": 0.6,
     "scene": {

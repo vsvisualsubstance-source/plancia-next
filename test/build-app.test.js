@@ -8,6 +8,7 @@ const { appModules, buildAppBundle } = require('../build-app');
 test('app bundle preserves module order and parses as one client scope', () => {
   const bundle = buildAppBundle();
   const positions = [
+    '/* ---------- bus dei messaggi MQTT ---------- */',
     '/* ---------- vocabolario dello show ---------- */',
     '/* ---------- template ---------- */',
     '/* ---------- motore dello show (simulazione locale del rig) ---------- */',
@@ -29,7 +30,7 @@ test('app bundle preserves module order and parses as one client scope', () => {
 
   assert.equal(bundle.startsWith('(()=>{\n'), true);
   assert.equal(bundle.endsWith('\n})();\n'), true);
-  assert.equal(appModules.length, 38);
+  assert.equal(appModules.length, 39);
   assert.equal(positions.every(position => position >= 0), true);
   assert.deepEqual(positions, [...positions].sort((a, b) => a - b));
   assert.doesNotThrow(() => new vm.Script(bundle));
